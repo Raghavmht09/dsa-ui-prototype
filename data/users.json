@@ -1,0 +1,97 @@
+[
+  {
+    "id": "u_arjun",
+    "name": "Arjun Singh",
+    "email": "arjun.singh@brand.com",
+    "role": "Admin",
+    "avatar": "AS",
+    "status": "active",
+    "lastActive": "2026-04-16T09:12:00Z",
+    "invitedAt": "2026-01-10T08:00:00Z",
+    "permissions": {
+      "viewProducts": true,
+      "viewAuditTrail": true,
+      "overrideLabels": true,
+      "overrideScores": true,
+      "manageUsers": true,
+      "manageConfig": true,
+      "manageSchedule": true
+    }
+  },
+  {
+    "id": "u_priya",
+    "name": "Priya Mehta",
+    "email": "priya.mehta@brand.com",
+    "role": "Editor",
+    "avatar": "PM",
+    "status": "active",
+    "lastActive": "2026-04-16T08:30:00Z",
+    "invitedAt": "2026-02-03T10:00:00Z",
+    "permissions": {
+      "viewProducts": true,
+      "viewAuditTrail": true,
+      "overrideLabels": true,
+      "overrideScores": false,
+      "manageUsers": false,
+      "manageConfig": false,
+      "manageSchedule": false
+    }
+  },
+  {
+    "id": "u_ritu",
+    "name": "Ritu Kaur",
+    "email": "ritu.kaur@brand.com",
+    "role": "Editor",
+    "avatar": "RK",
+    "status": "active",
+    "lastActive": "2026-04-15T17:45:00Z",
+    "invitedAt": "2026-04-10T10:05:00Z",
+    "permissions": {
+      "viewProducts": true,
+      "viewAuditTrail": true,
+      "overrideLabels": true,
+      "overrideScores": false,
+      "manageUsers": false,
+      "manageConfig": false,
+      "manageSchedule": false
+    }
+  },
+  {
+    "id": "u_deepak",
+    "name": "Deepak Nair",
+    "email": "deepak.nair@brand.com",
+    "role": "Viewer",
+    "avatar": "DN",
+    "status": "active",
+    "lastActive": "2026-04-14T11:00:00Z",
+    "invitedAt": "2026-03-15T09:00:00Z",
+    "permissions": {
+      "viewProducts": true,
+      "viewAuditTrail": false,
+      "overrideLabels": false,
+      "overrideScores": false,
+      "manageUsers": false,
+      "manageConfig": false,
+      "manageSchedule": false
+    }
+  },
+  {
+    "id": "u_sara",
+    "name": "Sara Williams",
+    "email": "sara.williams@brand.com",
+    "role": "Viewer",
+    "avatar": "SW",
+    "status": "pending",
+    "lastActive": null,
+    "invitedAt": "2026-04-16T08:00:00Z",
+    "permissions": {
+      "viewProducts": true,
+      "viewAuditTrail": false,
+      "overrideLabels": false,
+      "overrideScores": false,
+      "manageUsers": false,
+      "manageConfig": false,
+      "manageSchedule": false
+    }
+  }
+]

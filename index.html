@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Content Override — Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ─── Demo Toolbar ───────────────────────────────────────── -->
+<div class="demo-toolbar">
+  <span class="demo-toolbar__label">PROTOTYPE DEMO</span>
+  <div class="demo-toolbar__role-switcher">
+    <span>Role:</span>
+    <button class="role-btn active" data-role="Admin">Admin</button>
+    <button class="role-btn" data-role="Editor">Editor</button>
+    <button class="role-btn" data-role="Viewer">Viewer</button>
+  </div>
+  <span class="demo-toolbar__hint">Select a product to view detail &amp; override attributes</span>
+</div>
+
+<!-- ─── App Shell ──────────────────────────────────────────── -->
+<div class="app-shell">
+
+  <!-- Icon Rail -->
+  <nav class="icon-rail" id="iconRail">
+    <div class="icon-rail__logo">DW</div>
+    <div class="icon-rail__items">
+      <button class="rail-item active" data-view="products" title="Content Quality Analysis">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.9"/>
+          <rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.6"/>
+          <rect x="3" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.6"/>
+          <rect x="13" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.4"/>
+        </svg>
+        <span class="rail-item__label">Products</span>
+      </button>
+      <button class="rail-item" data-view="audit" title="Audit Trail">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="2"/>
+          <line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="rail-item__label">Audit</span>
+      </button>
+      <button class="rail-item" data-view="settings-users" title="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="rail-item__label">Settings</span>
+      </button>
+    </div>
+    <div class="icon-rail__avatar" id="currentUserAvatar" title="Current user">AS</div>
+  </nav>
+
+  <!-- Sub-nav -->
+  <aside class="sub-nav" id="subNav"></aside>
+
+  <!-- Main content -->
+  <main class="main-content" id="mainContent"></main>
+
+</div>
+
+<!-- ─── Override Popup (rendered by JS) ──────────────────── -->
+<div id="overrideBackdrop" class="override-backdrop hidden"></div>
+
+<!-- ─── Invite Modal ──────────────────────────────────────── -->
+<div class="modal-backdrop hidden" id="modalBackdrop">
+  <div class="modal" id="modalBox">
+    <div class="modal__header">
+      <span class="modal__title" id="modalTitle">Confirm</span>
+      <button class="modal__close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal__body" id="modalBody"></div>
+    <div class="modal__footer">
+      <button class="btn btn--secondary" id="modalCancel">Cancel</button>
+      <button class="btn btn--primary" id="modalConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Toast Container ────────────────────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ─── Screen Templates ───────────────────────────────────── -->
+
+<template id="tpl-settings-users">
+  <div class="settings-layout">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">User Management</h1>
+        <p class="page-subtitle">Manage team members and their access roles</p>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h3>Team Members</h3>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="settings-card__hint" id="userCount">0 members</span>
+          <button class="role-info-btn" id="roleInfoBtn" title="View role permissions">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="users-table-wrap">
+        <table class="users-table">
+          <thead><tr>
+            <th>User</th><th>Role</th><th>Status</th><th>Last Active</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-settings-config">
+  <div class="settings-layout">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Score Configuration</h1>
+        <p class="page-subtitle">Define override mode and score threshold mapping</p>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h3>Override Mode</h3>
+        <span class="settings-card__hint">Controls what editors can change per attribute</span>
+      </div>
+      <div class="override-mode-toggle" id="overrideModeToggle">
+        <label class="mode-option">
+          <input type="radio" name="overrideMode" value="label" />
+          <div class="mode-option__body">
+            <strong>Label-based</strong>
+            <p>Editors assign Correct / Incorrect labels. System scores remain unchanged.</p>
+          </div>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="overrideMode" value="score" />
+          <div class="mode-option__body">
+            <strong>Score-based</strong>
+            <p>Editors directly set the confidence score (0–100). Label derived automatically from thresholds.</p>
+          </div>
+        </label>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h3>Score → Label Thresholds</h3>
+        <span class="settings-card__hint">Changes trigger full score re-propagation on next scheduled run</span>
+      </div>
+      <div class="threshold-config" id="thresholdConfig">
+        <div class="threshold-visual" id="thresholdVisual"></div>
+        <div class="threshold-row">
+          <div class="threshold-pill threshold-pill--correct">Correct</div>
+          <div class="threshold-range">
+            <label>Min score</label>
+            <input type="number" id="correctMin" min="0" max="100" class="threshold-input" />
+            <span>— 100</span>
+          </div>
+        </div>
+        <div class="threshold-row">
+          <div class="threshold-pill threshold-pill--incorrect">Incorrect</div>
+          <div class="threshold-range">
+            <span>0 —</span>
+            <label>Max score</label>
+            <input type="number" id="incorrectMax" min="0" max="100" class="threshold-input" />
+          </div>
+        </div>
+        <div class="threshold-row threshold-row--derived">
+          <div class="threshold-pill threshold-pill--review">Needs Review</div>
+          <div class="threshold-range threshold-range--derived">
+            <span id="reviewRangeDerived">61 — 79 (derived)</span>
+          </div>
+        </div>
+      </div>
+      <div class="settings-card__footer">
+        <button class="btn btn--primary" id="saveThresholdsBtn">Save Thresholds</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h3>Undo Window</h3>
+        <span class="settings-card__hint">Seconds editors have to undo an override after submitting</span>
+      </div>
+      <div class="settings-card__body">
+        <div class="countdown-config">
+          <label class="countdown-config__label">Duration (seconds)</label>
+          <input type="number" id="countdownDuration" min="5" max="60" class="threshold-input" />
+        </div>
+      </div>
+      <div class="settings-card__footer">
+        <button class="btn btn--primary" id="saveCountdownBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-settings-schedule">
+  <div class="settings-layout">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Score Recompute Schedule</h1>
+        <p class="page-subtitle">Configure when propagated scores are recalculated</p>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header"><h3>Schedule Status</h3></div>
+      <div class="schedule-status">
+        <div class="schedule-status__badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#00BD70" opacity="0.2"/><path d="M8 12l3 3 5-5" stroke="#00BD70" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Healthy
+        </div>
+        <div class="schedule-status__meta">
+          <div class="schedule-meta-row"><span class="schedule-meta-row__label">Last run:</span><span class="schedule-meta-row__value" id="scheduleLastRun">—</span></div>
+          <div class="schedule-meta-row"><span class="schedule-meta-row__label">Next run:</span><span class="schedule-meta-row__value" id="scheduleNextRun">—</span></div>
+          <div class="schedule-meta-row"><span class="schedule-meta-row__label">Duration:</span><span class="schedule-meta-row__value" id="scheduleLastDuration">—</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h3>Cron Expression</h3>
+        <span class="settings-card__hint">Standard Unix cron format (UTC)</span>
+      </div>
+      <div class="cron-config">
+        <div class="cron-input-wrap">
+          <input type="text" id="cronExpression" class="cron-input" placeholder="0 2 * * *" />
+          <div class="cron-human-readable" id="cronHumanReadable">Every day at 2:00 AM UTC</div>
+        </div>
+        <div class="cron-presets">
+          <span>Presets:</span>
+          <button class="cron-preset" data-cron="0 2 * * *">Daily 2AM</button>
+          <button class="cron-preset" data-cron="0 2 * * 0">Weekly Sun</button>
+          <button class="cron-preset" data-cron="0 2 1 * *">Monthly 1st</button>
+        </div>
+      </div>
+      <div class="settings-card__footer">
+        <button class="btn btn--secondary" id="runNowBtn">Force Refresh Now</button>
+        <button class="btn btn--primary" id="saveCronBtn">Save Schedule</button>
+      </div>
+    </div>
+    <div class="settings-card">
+      <div class="settings-card__header">
+        <h3>Propagation Scope</h3>
+        <span class="settings-card__hint">Which score levels are recomputed on each run</span>
+      </div>
+      <div class="propagation-levels">
+        <label class="prop-level"><input type="checkbox" checked disabled /> Attribute scores <span class="prop-level__note">Source — always recomputed</span></label>
+        <label class="prop-level"><input type="checkbox" id="propProduct" checked /> Product-level aggregate</label>
+        <label class="prop-level"><input type="checkbox" id="propRetailer" checked /> Retailer-level aggregate</label>
+        <label class="prop-level"><input type="checkbox" id="propBrand" checked /> Brand-level aggregate</label>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-audit">
+  <div class="audit-screen-layout">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Audit Trail</h1>
+        <p class="page-subtitle">Complete history of content overrides and system events</p>
+      </div>
+      <div class="page-header__actions">
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#9CA8C5" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="#9CA8C5" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="Search audit log…" id="auditSearch" />
+        </div>
+        <div class="filter-pills" id="auditActionFilter">
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="label_override">Label</button>
+          <button class="filter-pill" data-filter="score_override">Score</button>
+          <button class="filter-pill" data-filter="config_change">Config</button>
+          <button class="filter-pill" data-filter="user_invited">Users</button>
+        </div>
+      </div>
+    </div>
+    <div class="audit-log" id="auditLog"></div>
+  </div>
+</template>
+
+<script src="js/app.js"></script>
+</body>
+</html>

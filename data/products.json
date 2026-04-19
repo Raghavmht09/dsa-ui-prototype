@@ -1,0 +1,220 @@
+[
+  {
+    "id": "p001",
+    "sku": "SKU-7842-A",
+    "title": "Neutrogena Hydro Boost Water Gel Moisturizer 1.7oz",
+    "brand": "Neutrogena",
+    "category": "Skincare",
+    "image": "https://placehold.co/80x80/e8f4fd/008BEC?text=NHB",
+    "brandScore": 87,
+    "description": "Neutrogena Hydro Boost Water Gel is an oil-free facial moisturizer that delivers continuous hydration to keep skin looking smooth, supple and hydrated. The unique water-gel formula contains Hyaluronic Acid that helps attract moisture and lock it in, providing a burst of hydration all day long.",
+    "bulletPoints": [
+      "Oil-free, non-comedogenic formula absorbs instantly without any greasy residue",
+      "Hyaluronic Acid draws in and locks in moisture for 24-hour hydration",
+      "Dermatologist tested and recommended for normal to oily skin types",
+      "Lightweight gel texture melts into skin for a soft, smooth finish",
+      "Fragrance-free and suitable for sensitive skin"
+    ],
+    "retailers": [
+      { "id": "r_walmart", "name": "Walmart", "score": 91, "status": "correct", "lastUpdated": "2026-04-15T10:22:00Z" },
+      { "id": "r_target",  "name": "Target",  "score": 83, "status": "correct", "lastUpdated": "2026-04-14T08:11:00Z" },
+      { "id": "r_amazon",  "name": "Amazon",  "score": 78, "status": "modified", "lastUpdated": "2026-04-13T15:45:00Z" }
+    ]
+  },
+  {
+    "id": "p002",
+    "sku": "SKU-3310-B",
+    "title": "Dove Men+Care Extra Fresh Body Wash 18oz",
+    "brand": "Dove",
+    "category": "Body Wash",
+    "image": "https://placehold.co/80x80/e8f8f0/00BD70?text=DMC",
+    "brandScore": 72,
+    "description": "Dove Men+Care Extra Fresh Body Wash combines effective cleansing with MicroMoisture technology to fight skin dryness. This invigorating body wash features a fresh, cooling scent that leaves skin feeling clean and refreshed without the tight, dry feeling that some soaps leave behind.",
+    "bulletPoints": [
+      "MicroMoisture technology activates on skin to fight dryness with every wash",
+      "Cooling fresh scent energizes your morning shower routine",
+      "Clinically proven to fight skin dryness better than ordinary soap",
+      "pH-balanced formula is gentle enough for daily use",
+      "18 oz size provides long-lasting value for the whole family"
+    ],
+    "retailers": [
+      { "id": "r_walmart", "name": "Walmart", "score": 68, "status": "incorrect", "lastUpdated": "2026-04-16T09:00:00Z" },
+      { "id": "r_kroger", "name": "Kroger",  "score": 74, "status": "correct",  "lastUpdated": "2026-04-12T11:30:00Z" }
+    ]
+  },
+  {
+    "id": "p003",
+    "sku": "SKU-9921-C",
+    "title": "L'Oreal Paris Elvive Total Repair 5 Shampoo 28oz",
+    "brand": "L'Oreal",
+    "category": "Hair Care",
+    "image": "https://placehold.co/80x80/fff3e0/E65100?text=LOE",
+    "brandScore": 94,
+    "description": "L'Oreal Paris Elvive Total Repair 5 Shampoo targets 5 signs of damaged hair: weakness, roughness, dullness, split ends, and dehydration. Formulated with Ceramide and Protein, this repairing shampoo leaves hair feeling stronger, smoother, and visibly healthier with every wash.",
+    "bulletPoints": [
+      "Targets 5 signs of damage: weakness, roughness, dullness, split ends, and dehydration",
+      "Fortified with Ceramide and Protein to reinforce the hair fiber from within",
+      "Lathers into a rich, luxurious foam that deeply cleanses without stripping",
+      "For best results, follow with Elvive Total Repair 5 Conditioner",
+      "Safe for color-treated hair and suitable for daily use"
+    ],
+    "retailers": [
+      { "id": "r_walmart", "name": "Walmart", "score": 96, "status": "correct",  "lastUpdated": "2026-04-15T14:00:00Z" },
+      { "id": "r_target",  "name": "Target",  "score": 93, "status": "correct",  "lastUpdated": "2026-04-14T10:00:00Z" },
+      { "id": "r_amazon",  "name": "Amazon",  "score": 91, "status": "correct",  "lastUpdated": "2026-04-13T08:00:00Z" },
+      { "id": "r_cvs",     "name": "CVS",     "score": 88, "status": "correct",  "lastUpdated": "2026-04-11T16:20:00Z" }
+    ]
+  },
+  {
+    "id": "p004",
+    "sku": "SKU-4455-D",
+    "title": "Colgate Total Whitening Toothpaste 4.8oz",
+    "brand": "Colgate",
+    "category": "Oral Care",
+    "image": "https://placehold.co/80x80/feeceb/D32F2F?text=CTW",
+    "brandScore": 61,
+    "description": "Colgate Total Whitening Toothpaste provides whole-mouth health protection against bacteria on teeth, tongue, cheeks, and gums for 12 hours. The advanced formula helps remove surface stains while fighting cavities, gingivitis, plaque, tartar, sensitivity, and bad breath all in one toothpaste.",
+    "bulletPoints": [
+      "12-hour antibacterial protection across your whole mouth, not just teeth",
+      "Fights 6 dental health issues: cavities, gingivitis, plaque, tartar, sensitivity, and bad breath",
+      "Whitening formula visibly brightens teeth by removing surface stains",
+      "ADA Accepted and clinically proven for superior whole-mouth health",
+      "Fresh mint flavor leaves mouth feeling clean and breath refreshed"
+    ],
+    "retailers": [
+      { "id": "r_walmart", "name": "Walmart", "score": 55, "status": "incorrect", "lastUpdated": "2026-04-16T07:30:00Z" },
+      { "id": "r_walgreens", "name": "Walgreens", "score": 63, "status": "incorrect", "lastUpdated": "2026-04-15T12:00:00Z" },
+      { "id": "r_target",   "name": "Target",    "score": 70, "status": "modified",  "lastUpdated": "2026-04-14T09:15:00Z" }
+    ]
+  },
+  {
+    "id": "p005",
+    "sku": "SKU-6677-E",
+    "title": "Pantene Pro-V Daily Moisture Renewal Conditioner 27.7oz",
+    "brand": "Pantene",
+    "category": "Hair Care",
+    "image": "https://placehold.co/80x80/e8f4fd/4E4365?text=PPC",
+    "brandScore": 85,
+    "description": "Pantene Pro-V Daily Moisture Renewal Conditioner is specially designed to replenish dry hair with intense moisture and nutrients. Pro-Vitamin formula penetrates deep into the hair shaft to repair damage from root to tip, leaving hair silky smooth, shiny, and 10x stronger against breakage.",
+    "bulletPoints": [
+      "Pro-Vitamin B5 formula penetrates deep to repair and strengthen hair from within",
+      "10x stronger against breakage versus non-conditioning shampoo",
+      "Lightweight moisture that won't weigh hair down or leave residue",
+      "Replenishes dry, brittle hair and seals split ends for smoother texture",
+      "27.7 oz family-size bottle — ideal for daily use on medium to long hair"
+    ],
+    "retailers": [
+      { "id": "r_walmart", "name": "Walmart", "score": 88, "status": "correct", "lastUpdated": "2026-04-15T11:00:00Z" },
+      { "id": "r_amazon",  "name": "Amazon",  "score": 82, "status": "correct", "lastUpdated": "2026-04-13T13:00:00Z" }
+    ]
+  },
+  {
+    "id": "p006",
+    "sku": "SKU-2233-F",
+    "title": "Head & Shoulders Classic Clean Shampoo 23.7oz",
+    "brand": "Head & Shoulders",
+    "category": "Hair Care",
+    "image": "https://placehold.co/80x80/ecf6fd/108EE9?text=H%26S",
+    "brandScore": 79,
+    "description": "Head & Shoulders Classic Clean Shampoo delivers up to 100% flake-free hair from the very first wash. The clinically proven formula targets dandruff-causing microbes at the scalp while leaving hair clean, manageable, and smelling fresh with an iconic clean scent.",
+    "bulletPoints": [
+      "Up to 100% dandruff protection — clinically proven from the first wash",
+      "Targets dandruff-causing microbes at the source for long-lasting scalp health",
+      "Cleans and refreshes hair and scalp without over-drying",
+      "Classic Clean scent is long-lasting and loved by over 200 million people",
+      "Suitable for daily use and safe for color-treated hair"
+    ],
+    "retailers": [
+      { "id": "r_walmart",  "name": "Walmart",  "score": 81, "status": "correct",  "lastUpdated": "2026-04-15T09:45:00Z" },
+      { "id": "r_target",   "name": "Target",   "score": 77, "status": "modified", "lastUpdated": "2026-04-14T08:30:00Z" },
+      { "id": "r_kroger",   "name": "Kroger",   "score": 75, "status": "correct",  "lastUpdated": "2026-04-12T14:00:00Z" }
+    ]
+  },
+  {
+    "id": "p007",
+    "sku": "SKU-8899-G",
+    "title": "Olay Regenerist Micro-Sculpting Serum 1.3oz",
+    "brand": "Olay",
+    "category": "Skincare",
+    "image": "https://placehold.co/80x80/fff8e1/F57F17?text=ORM",
+    "brandScore": 91,
+    "description": "Olay Regenerist Micro-Sculpting Serum is a concentrated anti-aging facial serum that visibly firms and lifts skin in just 28 days. The advanced formula with Niacinamide, Amino-Peptide Complex II, and Hyaluronic Acid penetrates 10 surface layers to regenerate skin cells for visibly firmer, smoother skin.",
+    "bulletPoints": [
+      "Penetrates 10 surface skin layers to regenerate surface cells for firmer skin",
+      "Advanced Amino-Peptide Complex II with Niacinamide boosts collagen production",
+      "Hyaluronic Acid plumps and hydrates for a visible reduction in fine lines",
+      "Fragrance-free formula is suitable for sensitive skin and daily use",
+      "Clinically tested: 99% of women saw improvement in skin firmness within 28 days"
+    ],
+    "retailers": [
+      { "id": "r_walmart",  "name": "Walmart",  "score": 93, "status": "correct", "lastUpdated": "2026-04-16T06:00:00Z" },
+      { "id": "r_amazon",   "name": "Amazon",   "score": 90, "status": "correct", "lastUpdated": "2026-04-15T18:00:00Z" },
+      { "id": "r_walgreens","name": "Walgreens","score": 88, "status": "correct", "lastUpdated": "2026-04-14T12:00:00Z" }
+    ]
+  },
+  {
+    "id": "p008",
+    "sku": "SKU-1122-H",
+    "title": "Gillette Mach3 Razor 1 Count",
+    "brand": "Gillette",
+    "category": "Shaving",
+    "image": "https://placehold.co/80x80/e8f4fd/1565C0?text=GM3",
+    "brandScore": 66,
+    "description": "The Gillette Mach3 Razor features three progressively aligned blades that cut hair more efficiently for a close, comfortable shave. The anti-friction, DuraComfort blades glide smoothly over skin while the Indicator Lubrication Strip fades to white when shaving benefit is diminished, signaling when to replace the blade.",
+    "bulletPoints": [
+      "3 progressively aligned DuraComfort blades for a closer, more comfortable shave",
+      "Anti-friction coating reduces friction for a smooth glide with every stroke",
+      "Indicator Lubrication Strip fades to white when it's time to change the blade",
+      "Pivoting head with 5 microfins stretches skin to prepare hair for the blade",
+      "Compatible with all Gillette Mach3 replacement blade cartridges"
+    ],
+    "retailers": [
+      { "id": "r_walmart",  "name": "Walmart",  "score": 62, "status": "incorrect", "lastUpdated": "2026-04-16T08:15:00Z" },
+      { "id": "r_cvs",      "name": "CVS",      "score": 69, "status": "modified",  "lastUpdated": "2026-04-15T10:30:00Z" }
+    ]
+  },
+  {
+    "id": "p009",
+    "sku": "SKU-5566-I",
+    "title": "Aveeno Daily Moisturizing Lotion 18oz",
+    "brand": "Aveeno",
+    "category": "Skincare",
+    "image": "https://placehold.co/80x80/e8f8f0/2E7D32?text=ADM",
+    "brandScore": 88,
+    "description": "Aveeno Daily Moisturizing Lotion is clinically proven to improve the health of dry skin in just one day, with continued improvement in 2 weeks. Formulated with Active Naturals Colloidal Oat and rich emollients, this fast-absorbing lotion soothes and moisturizes dry skin without any greasy feel.",
+    "bulletPoints": [
+      "Clinically proven to improve dry skin health in just 1 day of use",
+      "Active Naturals Colloidal Oat locks in moisture and soothes skin irritation",
+      "Lightweight, non-greasy formula absorbs quickly into skin",
+      "Fragrance-free and hypoallergenic — ideal for sensitive skin",
+      "National Eczema Association accepted and dermatologist recommended"
+    ],
+    "retailers": [
+      { "id": "r_walmart",  "name": "Walmart",  "score": 90, "status": "correct", "lastUpdated": "2026-04-15T07:00:00Z" },
+      { "id": "r_target",   "name": "Target",   "score": 87, "status": "correct", "lastUpdated": "2026-04-14T15:00:00Z" },
+      { "id": "r_amazon",   "name": "Amazon",   "score": 86, "status": "correct", "lastUpdated": "2026-04-13T11:00:00Z" }
+    ]
+  },
+  {
+    "id": "p010",
+    "sku": "SKU-7733-J",
+    "title": "Crest 3D Whitestrips Professional Effects 20 Treatments",
+    "brand": "Crest",
+    "category": "Oral Care",
+    "image": "https://placehold.co/80x80/fce4ec/C62828?text=C3D",
+    "brandScore": 73,
+    "description": "Crest 3D Whitestrips Professional Effects deliver professional-level teeth whitening results at home. The advanced seal technology keeps strips firmly in place while the enamel-safe whitening gel removes years of set-in stains from coffee, wine, and tobacco to reveal a noticeably whiter smile in just 20 days.",
+    "bulletPoints": [
+      "Removes 14 years of set-in stains for a noticeably whiter smile in 20 days",
+      "Advanced Seal No-Slip Technology keeps strips in place — talk and drink water while whitening",
+      "Enamel-safe formula recommended by dentists for safe at-home whitening",
+      "20 treatments included — use one upper and one lower strip daily for best results",
+      "Results last up to 12 months with periodic maintenance treatments"
+    ],
+    "retailers": [
+      { "id": "r_walmart",  "name": "Walmart",  "score": 75, "status": "correct",   "lastUpdated": "2026-04-15T16:00:00Z" },
+      { "id": "r_walgreens","name": "Walgreens","score": 71, "status": "incorrect", "lastUpdated": "2026-04-16T04:00:00Z" },
+      { "id": "r_amazon",   "name": "Amazon",   "score": 74, "status": "correct",   "lastUpdated": "2026-04-13T09:30:00Z" }
+    ]
+  }
+]

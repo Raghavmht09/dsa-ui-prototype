@@ -1,0 +1,352 @@
+{
+  "p001": {
+    "r_walmart": {
+      "retailerName": "Walmart",
+      "productScore": 91,
+      "attributes": [
+        {
+          "id": "attr_title",
+          "name": "Product Title",
+          "systemValue": "Neutrogena Hydro Boost Water Gel Moisturizer, 1.7 oz",
+          "systemScore": 95,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_brand",
+          "name": "Brand",
+          "systemValue": "Neutrogena",
+          "systemScore": 99,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_size",
+          "name": "Size / Volume",
+          "systemValue": "1.7 oz",
+          "systemScore": 93,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_ingredients",
+          "name": "Ingredients List",
+          "systemValue": "Water, Dimethicone, Glycerin, Hyaluronic Acid...",
+          "systemScore": 88,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_images",
+          "name": "Product Images",
+          "systemValue": "6 images detected",
+          "systemScore": 91,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_description",
+          "name": "Short Description",
+          "systemValue": "Hydro Boost Water Gel moisturizer with hyaluronic acid...",
+          "systemScore": 85,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        }
+      ]
+    },
+    "r_amazon": {
+      "retailerName": "Amazon",
+      "productScore": 78,
+      "attributes": [
+        {
+          "id": "attr_title",
+          "name": "Product Title",
+          "systemValue": "Neutrogena Hydro Boost Water Gel Moisturizer 1.7 Fl Oz (Pack of 1)",
+          "systemScore": 80,
+          "displayLabel": "Correct",
+          "overrideState": "modified",
+          "overrideLabel": "Incorrect",
+          "overrideScore": null,
+          "overrideReason": "Title includes pack count which is inaccurate for single unit listing",
+          "overrideBy": "Priya Mehta",
+          "overrideAt": "2026-04-13T15:45:00Z",
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_brand",
+          "name": "Brand",
+          "systemValue": "Neutrogena",
+          "systemScore": 99,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_size",
+          "name": "Size / Volume",
+          "systemValue": "1.7 Fl Oz",
+          "systemScore": 90,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_ingredients",
+          "name": "Ingredients List",
+          "systemValue": "Partially listed — missing preservatives section",
+          "systemScore": 62,
+          "displayLabel": "Incorrect",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_images",
+          "name": "Product Images",
+          "systemValue": "3 images detected",
+          "systemScore": 71,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_description",
+          "name": "Short Description",
+          "systemValue": "Fast-absorbing gel moisturizer with Hyaluronic Acid",
+          "systemScore": 77,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        }
+      ]
+    }
+  },
+  "p004": {
+    "r_walmart": {
+      "retailerName": "Walmart",
+      "productScore": 55,
+      "attributes": [
+        {
+          "id": "attr_title",
+          "name": "Product Title",
+          "systemValue": "Colgate Total Whitening Toothpaste, 4.8 oz",
+          "systemScore": 58,
+          "displayLabel": "Incorrect",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_brand",
+          "name": "Brand",
+          "systemValue": "Colgate",
+          "systemScore": 99,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_size",
+          "name": "Size / Volume",
+          "systemValue": "4.8 oz",
+          "systemScore": 91,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_active_ingredients",
+          "name": "Active Ingredients",
+          "systemValue": "Sodium Fluoride 0.243%",
+          "systemScore": 45,
+          "displayLabel": "Incorrect",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_images",
+          "name": "Product Images",
+          "systemValue": "2 images detected",
+          "systemScore": 50,
+          "displayLabel": "Incorrect",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_description",
+          "name": "Short Description",
+          "systemValue": "Total whitening toothpaste for cavity protection",
+          "systemScore": 52,
+          "displayLabel": "Incorrect",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        }
+      ]
+    },
+    "r_target": {
+      "retailerName": "Target",
+      "productScore": 70,
+      "attributes": [
+        {
+          "id": "attr_title",
+          "name": "Product Title",
+          "systemValue": "Colgate Total Whitening Toothpaste Mint — 4.8oz",
+          "systemScore": 65,
+          "displayLabel": "Incorrect",
+          "overrideState": "modified",
+          "overrideLabel": "Correct",
+          "overrideScore": null,
+          "overrideReason": "Variant suffix is accurate for this SKU",
+          "overrideBy": "Arjun Singh",
+          "overrideAt": "2026-04-14T09:15:00Z",
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_brand",
+          "name": "Brand",
+          "systemValue": "Colgate",
+          "systemScore": 99,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_size",
+          "name": "Size / Volume",
+          "systemValue": "4.8oz",
+          "systemScore": 95,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_active_ingredients",
+          "name": "Active Ingredients",
+          "systemValue": "Sodium Fluoride 0.243%",
+          "systemScore": 72,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        },
+        {
+          "id": "attr_images",
+          "name": "Product Images",
+          "systemValue": "5 images detected",
+          "systemScore": 80,
+          "displayLabel": "Correct",
+          "overrideState": null,
+          "overrideLabel": null,
+          "overrideScore": null,
+          "overrideReason": null,
+          "overrideBy": null,
+          "overrideAt": null,
+          "countdownEndsAt": null
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "overrideMode": "label",
+  "scoreThresholds": {
+    "correct_min": 80,
+    "incorrect_max": 60,
+    "labels": {
+      "correct": { "min": 80, "max": 100, "label": "Correct", "color": "#00A86B" },
+      "needsReview": { "min": 61, "max": 79, "label": "Needs Review", "color": "#E65100" },
+      "incorrect": { "min": 0, "max": 60, "label": "Incorrect", "color": "#D32F2F" }
+    }
+  },
+  "propagation": {
+    "enabled": true,
+    "levels": ["attribute", "product", "retailer", "brand"],
+    "triggerRecomputeOnOverride": true
+  },
+  "schedule": {
+    "enabled": true,
+    "cronExpression": "0 2 * * *",
+    "humanReadable": "Every day at 2:00 AM UTC",
+    "timezone": "UTC",
+    "lastRun": "2026-04-16T02:00:00Z",
+    "nextRun": "2026-04-17T02:00:00Z",
+    "runDurationMinutes": 14,
+    "status": "healthy"
+  },
+  "countdownTimer": {
+    "enabled": true,
+    "durationSeconds": 10,
+    "undoWindowSeconds": 10
+  },
+  "overrideEligibility": {
+    "enabled": false,
+    "eligibleBelowScore": 60,
+    "eligibleAboveScore": 80
+  },
+  "reasonField": {
+    "required": false,
+    "placeholder": "Optional: explain why you're updating this label"
+  },
+  "brands": [
+    { "id": "brand_neutrogena", "name": "Neutrogena" },
+    { "id": "brand_dove",       "name": "Dove" },
+    { "id": "brand_loreal",     "name": "L'Oreal" },
+    { "id": "brand_colgate",    "name": "Colgate" },
+    { "id": "brand_pantene",    "name": "Pantene" },
+    { "id": "brand_hs",         "name": "Head & Shoulders" },
+    { "id": "brand_olay",       "name": "Olay" },
+    { "id": "brand_gillette",   "name": "Gillette" },
+    { "id": "brand_aveeno",     "name": "Aveeno" },
+    { "id": "brand_crest",      "name": "Crest" }
+  ],
+  "retailers": [
+    { "id": "r_walmart",   "name": "Walmart" },
+    { "id": "r_target",    "name": "Target" },
+    { "id": "r_amazon",    "name": "Amazon" },
+    { "id": "r_kroger",    "name": "Kroger" },
+    { "id": "r_cvs",       "name": "CVS" },
+    { "id": "r_walgreens", "name": "Walgreens" }
+  ]
+}
