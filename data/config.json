@@ -2,11 +2,9 @@
   "overrideMode": "label",
   "scoreThresholds": {
     "correct_min": 80,
-    "incorrect_max": 60,
     "labels": {
       "correct": { "min": 80, "max": 100, "label": "Correct", "color": "#00A86B" },
-      "needsReview": { "min": 61, "max": 79, "label": "Needs Review", "color": "#E65100" },
-      "incorrect": { "min": 0, "max": 60, "label": "Incorrect", "color": "#D32F2F" }
+      "incorrect": { "min": 0, "max": 79, "label": "Incorrect", "color": "#D32F2F" }
     }
   },
   "propagation": {

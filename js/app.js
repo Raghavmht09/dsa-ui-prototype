@@ -138,7 +138,7 @@ function renderSubNav(view) {
       <div class="sub-nav__section">
         <div class="sub-nav__heading">Content Quality</div>
         <button class="sub-nav__item active" data-view="products">Product List</button>
-        <button class="sub-nav__item" data-view="audit">Audit Trail</button>
+        ${STATE.role === 'Admin' ? `<button class="sub-nav__item" data-view="audit">Audit Trail</button>` : ''}
       </div>`;
     nav.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => navigate(b.dataset.view)));
     return;
@@ -148,8 +148,10 @@ function renderSubNav(view) {
     nav.innerHTML = `
       <div class="sub-nav__section">
         <div class="sub-nav__heading">Audit</div>
+        <button class="sub-nav__item" data-view="products">Product List</button>
         <button class="sub-nav__item active" data-view="audit">Audit Trail</button>
       </div>`;
+    nav.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => navigate(b.dataset.view)));
     return;
   }
 
@@ -456,17 +458,11 @@ function initStackedBarChart(product) {
   const retailers = product.retailers;
   const labels = retailers.map(r => r.name);
 
-  // Generate per-retailer red/yellow/green distributions
+  // Generate per-retailer red/green distributions (binary: Correct / Incorrect)
   const incorrectData = retailers.map(r => {
-    const inc = r.score < 60 ? Math.round(40 + Math.random() * 20) : Math.round(5 + Math.random() * 15);
-    return inc;
+    return r.score < 80 ? Math.round(100 - r.score + Math.random() * 8) : Math.round(5 + Math.random() * 10);
   });
-  const reviewData = retailers.map((r, i) => {
-    const base = 100 - incorrectData[i];
-    const rev = r.score < 80 ? Math.round(base * 0.35) : Math.round(base * 0.18);
-    return rev;
-  });
-  const correctData = retailers.map((r, i) => Math.max(0, 100 - incorrectData[i] - reviewData[i]));
+  const correctData = retailers.map((r, i) => Math.max(0, 100 - incorrectData[i]));
 
   new Chart(canvas, {
     type: 'bar',
@@ -474,7 +470,6 @@ function initStackedBarChart(product) {
       labels,
       datasets: [
         { label: 'Incorrect', data: incorrectData, backgroundColor: '#FF545D', borderWidth: 0 },
-        { label: 'Needs Review', data: reviewData, backgroundColor: '#FFDE4C', borderWidth: 0 },
         { label: 'Correct', data: correctData, backgroundColor: '#00BD70', borderWidth: 0 },
       ],
     },
@@ -696,7 +691,7 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
       } else {
         btn.textContent = '−';
         btn.classList.add('is-expanded');
-        rowWrap.appendChild(buildAttrExpanded(attr, key, override));
+        rowWrap.appendChild(buildAttrExpanded(attr, key, override, { product, retailerId, section, panelRef, canOverride }));
       }
     });
 
@@ -771,12 +766,104 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
 }
 
 // ── Expanded attribute row ────────────────────────────────────────
-function buildAttrExpanded(attr, key, override) {
+function buildAttrExpanded(attr, key, override, ctx = {}) {
+  const { product, retailerId, canOverride } = ctx;
   const div = document.createElement('div');
   div.className = 'attr-expanded';
 
+  function refreshExpanded() {
+    const newDiv = buildAttrExpanded(attr, key, STATE.overrides[key], ctx);
+    div.replaceWith(newDiv);
+  }
+
   const isImage = attr.name.toLowerCase().includes('image');
-  if (isImage) {
+  const isSecondaryImage = attr.name.toLowerCase().includes('secondary');
+
+  if (isImage && isSecondaryImage && product && retailerId) {
+    // Per-image section: 3 synthetic secondary image rows with independent override
+    const perImageSection = document.createElement('div');
+    perImageSection.className = 'per-image-section';
+    perImageSection.innerHTML = `
+      <div class="per-image-section__header">
+        <span class="per-image-section__title">Per-image override</span>
+        <span class="per-image-section__hint">Override each secondary image independently</span>
+      </div>`;
+
+    const syntheticImages = [
+      { num: 1, systemScore: 87, systemValue: 'pack_front_angle.jpg' },
+      { num: 2, systemScore: 44, systemValue: 'lifestyle_kitchen.jpg' },
+      { num: 3, systemScore: 91, systemValue: 'ingredients_close.jpg' },
+    ];
+
+    syntheticImages.forEach(({ num, systemScore, systemValue }) => {
+      const imgAttr = {
+        id: `${attr.id}_img${num}`,
+        name: `Secondary Image ${num}`,
+        systemScore,
+        displayLabel: scoreToLabel(systemScore),
+        systemValue,
+        attributeType: 'secondary_image',
+      };
+      const imgKey = `${product.id}:${retailerId}:${imgAttr.id}`;
+      const imgOverride = STATE.overrides[imgKey];
+      const effectiveLabel = imgOverride ? imgOverride.label : imgAttr.displayLabel;
+      const lblClass = effectiveLabel === 'Correct' ? 'correct' : effectiveLabel === 'Incorrect' ? 'incorrect' : 'review';
+      const isImgModified = !!imgOverride;
+
+      const metaHtml = (isImgModified && imgOverride?.by)
+        ? `<button class="info-icon-btn" title="Updated by: ${imgOverride.by}\nDate: ${imgOverride.at ? new Date(imgOverride.at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'})+' UTC' : ''}\nReason: ${imgOverride.reason || '—'}" aria-label="Override history">ⓘ</button>` : '';
+
+      let actionHtml = '';
+      if (canOverride) {
+        actionHtml = isImgModified
+          ? `<button class="btn-undo-update per-img-undo-btn">Undo</button>`
+          : `<button class="btn-update per-img-update-btn">Update</button>`;
+      }
+
+      const imgRow = document.createElement('div');
+      imgRow.className = `per-image-row${isImgModified ? ' per-image-row--modified' : ''}`;
+      imgRow.innerHTML = `
+        <div class="per-image-row__compare">
+          <div class="per-image-col">
+            <div class="per-image-col__label">Reference</div>
+            <div class="per-image-thumb per-image-thumb--ref">${num}</div>
+          </div>
+          <div class="per-image-col">
+            <div class="per-image-col__label">Actual</div>
+            <div class="per-image-thumb per-image-thumb--actual">${num}</div>
+          </div>
+        </div>
+        <div class="per-image-row__info">
+          <span class="per-image-row__name">${imgAttr.name}${isImgModified ? ' <span class="modified-badge">Modified</span>' : ''}</span>
+          <div class="per-image-row__status">
+            <span class="status-pill status-pill--${lblClass}">${effectiveLabel}</span>
+            ${metaHtml}
+            <span class="per-image-row__score">Score: ${imgAttr.systemScore}</span>
+          </div>
+        </div>
+        <div class="per-image-row__action">${actionHtml}</div>`;
+
+      const updateBtn = imgRow.querySelector('.per-img-update-btn');
+      if (updateBtn) {
+        updateBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          openPerImageOverridePopup(imgKey, product, retailerId, imgAttr, refreshExpanded);
+        });
+      }
+      const undoBtn = imgRow.querySelector('.per-img-undo-btn');
+      if (undoBtn) {
+        undoBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          const revertLabel = imgOverride.oldLabel || scoreToLabel(imgAttr.systemScore);
+          commitPerImageOverride(imgKey, revertLabel, imgOverride.oldScore ?? null, '', refreshExpanded);
+        });
+      }
+
+      perImageSection.appendChild(imgRow);
+    });
+
+    div.appendChild(perImageSection);
+  } else if (isImage) {
     div.innerHTML = `
       <div class="attr-expanded__img-compare">
         <div class="attr-expanded__img-col">
@@ -815,6 +902,152 @@ function buildAttrExpanded(attr, key, override) {
   return div;
 }
 
+// ── Per-image override helpers ────────────────────────────────────
+function commitPerImageOverride(imgKey, newLabel, newScore, reason, onDone) {
+  const user = STATE.users.find(u => u.role === STATE.role) || STATE.users[0];
+  const oldOverride = STATE.overrides[imgKey];
+  const oldLabel = oldOverride ? oldOverride.label : scoreToLabel(parseInt(imgKey.split('img')[1]) > 0 ? 80 : 50);
+
+  if (newLabel === oldLabel && !newScore) {
+    delete STATE.overrides[imgKey];
+  } else {
+    STATE.overrides[imgKey] = {
+      label: newLabel, score: newScore,
+      oldLabel, oldScore: oldOverride?.score ?? null,
+      reason, by: user.name, at: new Date().toISOString(),
+      state: 'modified', committedAt: new Date().toISOString(),
+    };
+  }
+
+  const attrName = imgKey.split(':').pop().replace(/_/g, ' ');
+  showToast(`${attrName} updated to ${newLabel}`, 'success');
+  if (onDone) onDone();
+}
+
+function openPerImageOverridePopup(imgKey, product, retailerId, imgAttr, onDone) {
+  const mode = STATE.config.overrideMode || 'label';
+  const override = STATE.overrides[imgKey];
+  const currentLabel = override?.label || imgAttr.displayLabel || scoreToLabel(imgAttr.systemScore);
+  const currentScore = override?.score ?? imgAttr.systemScore ?? 80;
+  const retailerName = product.retailers.find(r => r.id === retailerId)?.name || retailerId;
+  const cfgLabels    = STATE.config.scoreThresholds?.labels || {};
+  const correctLabel   = cfgLabels.correct?.label   || 'Correct';
+  const incorrectLabel = cfgLabels.incorrect?.label  || 'Incorrect';
+
+  const backdrop = document.getElementById('overrideBackdrop');
+  backdrop.innerHTML = '';
+  backdrop.classList.remove('hidden');
+
+  const popup = document.createElement('div');
+  popup.className = 'override-popup';
+  popup.innerHTML = `
+    <div class="override-popup__header">
+      <div>
+        <div class="override-popup__title">Override: ${imgAttr.name}</div>
+        <div class="override-popup__subtitle">${product.title} @ ${retailerName}</div>
+      </div>
+      <div class="override-popup__header-right">
+        <span class="override-mode-badge override-mode-badge--${mode}">${mode === 'score' ? 'Score-based' : 'Label-based'}</span>
+        <button class="override-popup__close" id="perImgClose">&times;</button>
+      </div>
+    </div>
+    <div class="override-popup__body">
+      ${mode === 'label' ? `
+      <div>
+        <label class="field-label">Assign label</label>
+        <div class="label-choices">
+          <label class="label-choice ${currentLabel === correctLabel ? 'selected-correct' : ''}">
+            <input type="radio" name="newLabel" value="${correctLabel}" ${currentLabel === correctLabel ? 'checked' : ''} />
+            <span class="status-pill status-pill--correct">${correctLabel}</span>
+          </label>
+          <label class="label-choice ${currentLabel === incorrectLabel ? 'selected-incorrect' : ''}">
+            <input type="radio" name="newLabel" value="${incorrectLabel}" ${currentLabel === incorrectLabel ? 'checked' : ''} />
+            <span class="status-pill status-pill--incorrect">${incorrectLabel}</span>
+          </label>
+        </div>
+      </div>` : `
+      <div>
+        <label class="field-label">Set confidence score <span class="field-label__range">0 – 100</span></label>
+        <div class="score-slider-wrap">
+          <input type="range" min="0" max="100" value="${currentScore}" class="score-slider" id="perImgScoreSlider" />
+          <input type="number" min="0" max="100" value="${currentScore}" class="score-number" id="perImgScoreNumber" />
+        </div>
+        <div class="score-preview" id="perImgScorePreview">
+          Label: <span class="status-pill status-pill--${scoreToLabelClass(currentScore)}">${scoreToLabel(currentScore)}</span>
+        </div>
+      </div>`}
+      <div class="override-popup__reason">
+        <label class="field-label">Reason <span class="optional-tag">Optional</span></label>
+        <select id="perImgReasonCode" class="override-reason-select">
+          <option value="">— Select a reason (optional) —</option>
+          <option value="OR-01">Image marketing label</option>
+          <option value="OR-02">Image typography / topology</option>
+          <option value="OR-07">Secondary image ordering</option>
+          <option value="OR-08">Other</option>
+        </select>
+        <div id="perImgOtherWrap" class="override-other-wrap" style="display:none">
+          <textarea rows="2" placeholder="Describe the variation (encouraged, not required)…" id="perImgReasonText"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="override-popup__footer">
+      <button class="btn btn--secondary" id="perImgCancel">Cancel</button>
+      <button class="btn btn--primary" id="perImgSubmit">Confirm Override</button>
+    </div>`;
+
+  backdrop.appendChild(popup);
+
+  function close() { backdrop.classList.add('hidden'); backdrop.innerHTML = ''; }
+  popup.querySelector('#perImgClose').addEventListener('click', close);
+  popup.querySelector('#perImgCancel').addEventListener('click', close);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+
+  popup.querySelector('#perImgReasonCode').addEventListener('change', e => {
+    popup.querySelector('#perImgOtherWrap').style.display = e.target.value === 'OR-08' ? 'block' : 'none';
+  });
+
+  if (mode === 'label') {
+    popup.querySelectorAll('.label-choice input').forEach(inp => {
+      inp.addEventListener('change', () => {
+        popup.querySelectorAll('.label-choice').forEach(lc => {
+          const v = lc.querySelector('input').value;
+          const on = lc.querySelector('input').checked;
+          lc.className = 'label-choice' + (on ? ` selected-${v === correctLabel ? 'correct' : 'incorrect'}` : '');
+        });
+      });
+    });
+  } else {
+    const slider = popup.querySelector('#perImgScoreSlider');
+    const numInput = popup.querySelector('#perImgScoreNumber');
+    const preview = popup.querySelector('#perImgScorePreview');
+    function syncScore(val) {
+      const v = Math.min(100, Math.max(0, parseInt(val) || 0));
+      slider.value = v; numInput.value = v;
+      preview.innerHTML = `Label: <span class="status-pill status-pill--${scoreToLabelClass(v)}">${scoreToLabel(v)}</span>`;
+    }
+    slider.addEventListener('input', () => syncScore(slider.value));
+    numInput.addEventListener('input', () => syncScore(numInput.value));
+  }
+
+  popup.querySelector('#perImgSubmit').addEventListener('click', () => {
+    const reasonCode = popup.querySelector('#perImgReasonCode').value;
+    const freeText   = popup.querySelector('#perImgReasonText')?.value.trim() || '';
+    const reason     = reasonCode === 'OR-08' ? `${reasonCode}: ${freeText}`.trim().replace(/:\s*$/, '') : reasonCode || '';
+    let newLabel, newScore;
+    if (mode === 'score') {
+      newScore = parseInt(popup.querySelector('#perImgScoreNumber').value);
+      newLabel = scoreToLabel(newScore);
+    } else {
+      const checked = popup.querySelector('input[name="newLabel"]:checked');
+      if (!checked) { showToast('Please select a label', 'error'); return; }
+      newLabel = checked.value;
+      newScore = null;
+    }
+    close();
+    commitPerImageOverride(imgKey, newLabel, newScore, reason, onDone);
+  });
+}
+
 // ── Override Eligibility Check ────────────────────────────────────
 function isOverrideEligible(systemScore) {
   const elig = STATE.config.overrideEligibility;
@@ -833,10 +1066,9 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
   const retailerName = product.retailers.find(r => r.id === retailerId)?.name || retailerId;
 
   // Dynamic label names — read from config so threshold renaming propagates here
-  const cfgLabels     = STATE.config.scoreThresholds?.labels || {};
-  const correctLabel   = cfgLabels.correct?.label     || 'Correct';
-  const reviewLabel    = cfgLabels.needsReview?.label  || 'Needs Review';
-  const incorrectLabel = cfgLabels.incorrect?.label   || 'Incorrect';
+  const cfgLabels      = STATE.config.scoreThresholds?.labels || {};
+  const correctLabel   = cfgLabels.correct?.label   || 'Correct';
+  const incorrectLabel = cfgLabels.incorrect?.label  || 'Incorrect';
 
   const currentLabel = override?.label || attr.displayLabel || scoreToLabel(attr.systemScore);
   const currentScore = override?.score ?? attr.systemScore ?? 80;
@@ -871,10 +1103,6 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
           <label class="label-choice ${currentLabel === incorrectLabel ? 'selected-incorrect' : ''}">
             <input type="radio" name="newLabel" value="${incorrectLabel}" ${currentLabel === incorrectLabel ? 'checked' : ''} />
             <span class="status-pill status-pill--incorrect">${incorrectLabel}</span>
-          </label>
-          <label class="label-choice ${currentLabel === reviewLabel ? 'selected-review' : ''}">
-            <input type="radio" name="newLabel" value="${reviewLabel}" ${currentLabel === reviewLabel ? 'checked' : ''} />
-            <span class="status-pill status-pill--review">${reviewLabel}</span>
           </label>
         </div>
       </div>` : `
@@ -937,7 +1165,7 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
           const v  = lc.querySelector('input').value;
           const on = lc.querySelector('input').checked;
           lc.className = 'label-choice' + (on
-            ? ` selected-${v === correctLabel ? 'correct' : v === incorrectLabel ? 'incorrect' : 'review'}`
+            ? ` selected-${v === correctLabel ? 'correct' : 'incorrect'}`
             : '');
         });
       });
@@ -1145,8 +1373,8 @@ function buildEmbeddedAuditTrail(product) {
 //  SCREEN: Audit Trail
 // ════════════════════════════════════════════════════════════════
 function renderAuditScreen(container) {
-  if (STATE.role === 'Viewer') {
-    container.innerHTML = `<div class="access-denied"><h2>Access Restricted</h2><p>Audit trail is available to Editors and Admins only.</p></div>`;
+  if (STATE.role !== 'Admin') {
+    container.innerHTML = `<div class="access-denied"><h2>Access Restricted</h2><p>Audit trail is available to Admins only.</p></div>`;
     return;
   }
 
@@ -1518,18 +1746,10 @@ function renderSettingsConfig(container) {
                 <span>— 100</span>
               </div>
             </div>
-            <div class="threshold-row">
-              <div class="threshold-pill threshold-pill--incorrect">Incorrect</div>
-              <div class="threshold-range">
-                <span>0 —</span>
-                <label>Max score</label>
-                <input type="number" id="incorrectMax" min="0" max="100" class="threshold-input" />
-              </div>
-            </div>
             <div class="threshold-row threshold-row--derived">
-              <div class="threshold-pill threshold-pill--review">Needs Review</div>
+              <div class="threshold-pill threshold-pill--incorrect">Incorrect</div>
               <div class="threshold-range threshold-range--derived">
-                <span id="reviewRangeDerived">61 — 79 (derived)</span>
+                <span id="incorrectRangeDerived">0 — 79 (derived)</span>
               </div>
             </div>
           </div>
@@ -1542,13 +1762,6 @@ function renderSettingsConfig(container) {
               <div class="config-zone-text">
                 <strong>Correct</strong>
                 <p>Content closely matches the brand reference. No action required.</p>
-              </div>
-            </div>
-            <div class="config-zone-item">
-              <div class="config-zone-swatch config-zone-swatch--review"></div>
-              <div class="config-zone-text">
-                <strong>Needs Review</strong>
-                <p>Content partially matches or has minor deviations. Editor review recommended.</p>
               </div>
             </div>
             <div class="config-zone-item">
@@ -1671,31 +1884,25 @@ function renderSettingsConfig(container) {
   setModeActive(STATE.config.overrideMode);
 
   // Thresholds
-  const correctMinEl   = container.querySelector('#correctMin');
-  const incorrectMaxEl = container.querySelector('#incorrectMax');
-  const reviewEl       = container.querySelector('#reviewRangeDerived');
-  correctMinEl.value   = STATE.config.scoreThresholds.correct_min;
-  incorrectMaxEl.value = STATE.config.scoreThresholds.incorrect_max;
+  const correctMinEl = container.querySelector('#correctMin');
+  const incorrectRangeEl = container.querySelector('#incorrectRangeDerived');
+  correctMinEl.value = STATE.config.scoreThresholds.correct_min;
 
   function updateVisual() {
     const cMin = parseInt(correctMinEl.value) || 80;
-    const iMax = parseInt(incorrectMaxEl.value) || 60;
     const vis = container.querySelector('#thresholdVisual');
     if (vis) {
       vis.innerHTML = `
-        <div class="threshold-vis-incorrect" style="width:${iMax}%"></div>
-        <div class="threshold-vis-review"    style="width:${Math.max(0, cMin - iMax)}%"></div>
+        <div class="threshold-vis-incorrect" style="width:${cMin}%"></div>
         <div class="threshold-vis-correct"   style="width:${100 - cMin}%"></div>`;
     }
-    reviewEl.textContent = `${iMax + 1} — ${cMin - 1} (derived)`;
+    if (incorrectRangeEl) incorrectRangeEl.textContent = `0 — ${cMin - 1} (derived)`;
   }
   updateVisual();
   correctMinEl.addEventListener('input', updateVisual);
-  incorrectMaxEl.addEventListener('input', updateVisual);
 
   container.querySelector('#saveThresholdsBtn').addEventListener('click', () => {
-    STATE.config.scoreThresholds.correct_min  = parseInt(correctMinEl.value);
-    STATE.config.scoreThresholds.incorrect_max = parseInt(incorrectMaxEl.value);
+    STATE.config.scoreThresholds.correct_min = parseInt(correctMinEl.value);
     showToast('Thresholds saved', 'success');
   });
 
@@ -1925,21 +2132,17 @@ function generateSyntheticAttrs(product) {
 // ════════════════════════════════════════════════════════════════
 function scoreToLabel(score) {
   const s = parseInt(score);
-  if (isNaN(s)) return 'Needs Review';
-  const t = STATE.config.scoreThresholds || { correct_min: 80, incorrect_max: 60 };
-  if (s >= t.correct_min)  return 'Correct';
-  if (s <= t.incorrect_max) return 'Incorrect';
-  return 'Needs Review';
+  if (isNaN(s)) return 'Incorrect';
+  const t = STATE.config.scoreThresholds || {};
+  return s >= (t.correct_min ?? 80) ? 'Correct' : 'Incorrect';
 }
 function scoreToLabelClass(score) {
-  const l = scoreToLabel(score);
-  return l === 'Correct' ? 'correct' : l === 'Incorrect' ? 'incorrect' : 'review';
+  return scoreToLabel(score) === 'Correct' ? 'correct' : 'incorrect';
 }
 function labelClass(label) {
-  if (!label) return 'review';
   if (label === 'Correct') return 'correct';
   if (label === 'Incorrect') return 'incorrect';
-  return 'review';
+  return 'review'; // covers 'Correct - Slightly Modified' and other override states
 }
 function formatDateTime(iso) {
   if (!iso) return '—';
