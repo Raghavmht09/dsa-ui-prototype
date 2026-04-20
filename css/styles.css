@@ -399,36 +399,7 @@ img { display: block; max-width: 100%; }
   font-weight: 600; letter-spacing: 0.02em;
 }
 
-/* ── Info Button ("i") ──────────────────────────────────────── */
-.info-btn {
-  width: 16px; height: 16px; border-radius: 50%;
-  border: 1.5px solid #CBD5E1; background: #fff;
-  color: #94A3B8; font-size: 9px; font-weight: 700; font-style: italic;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; flex-shrink: 0; transition: var(--transition);
-}
-.info-btn:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
-.info-btn.is-open { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
-
-/* ── Attribute Info Panel (score methodology) ───────────────── */
-.attr-info-panel {
-  padding: 14px 16px 14px 50px; background: #F0F7FF;
-  border-bottom: 1px solid #BFDBFE; border-left: 3px solid var(--color-primary);
-}
-.attr-info-panel__heading {
-  font-size: 10px; font-weight: 700; color: var(--color-primary);
-  text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px;
-}
-.attr-info-panel__desc { font-size: var(--font-sm); color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 8px; }
-.attr-info-panel__how  { font-size: 11px; color: #64748B; line-height: 1.6; margin-bottom: 8px; }
-.attr-info-panel__thresholds { display: flex; gap: 8px; flex-wrap: wrap; }
-.attr-info-threshold {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 10px; padding: 3px 8px; border-radius: var(--radius-full); border: 1px solid;
-}
-.attr-info-threshold--correct   { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
-.attr-info-threshold--review    { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
-.attr-info-threshold--incorrect { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+/* (info-btn removed — score methodology moved into expanded panel) */
 
 /* ── Score Value ────────────────────────────────────────────── */
 .score-val { font-size: 13px; font-weight: 700; color: var(--color-text-primary); }
@@ -456,28 +427,70 @@ img { display: block; max-width: 100%; }
 }
 .btn-update:hover { background: var(--color-primary); color: #fff; box-shadow: var(--shadow-sm); }
 
-/* Expanded attribute content */
+/* ── Expanded attribute content ─────────────────────────────── */
 .attr-expanded {
   padding: 14px 16px 14px 50px; background: #F8FAFD;
   border-bottom: 1px solid var(--color-border-light);
+  display: flex; flex-direction: column; gap: 12px;
 }
-.attr-expanded__img-compare { display: flex; gap: 16px; margin-bottom: 12px; }
-.attr-expanded__img-col { flex: 1; display: flex; flex-direction: column; gap: 6px; max-width: 130px; }
-.attr-expanded__img-label { font-size: 11px; font-weight: 600; color: var(--color-text-secondary); text-align: center; }
+
+/* Reference vs Actual comparison */
+.attr-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.attr-compare--images { grid-template-columns: 120px 120px; }
+.attr-compare__col { display: flex; flex-direction: column; gap: 5px; }
+.attr-compare__label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--color-text-muted);
+}
+.attr-compare__value {
+  font-size: 12px; color: var(--color-text-primary); line-height: 1.5;
+  background: #fff; border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md); padding: 8px 10px;
+}
+
+/* Image placeholders */
 .attr-expanded__img {
-  height: 108px; background: var(--color-border-light); border-radius: var(--radius-md);
+  height: 96px; background: var(--color-border-light); border-radius: var(--radius-md);
   border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center;
 }
 .attr-expanded__img-placeholder { font-size: 11px; color: var(--color-text-muted); text-align: center; padding: 8px; }
-.attr-expanded__meta { display: flex; flex-direction: column; gap: 6px; }
-.attr-meta-row { display: flex; gap: 12px; align-items: baseline; }
-.attr-meta-row__label { font-size: 11px; color: var(--color-text-muted); min-width: 96px; }
-.attr-meta-row__val   { font-size: var(--font-sm); color: var(--color-text-primary); font-weight: 500; }
-.attr-override-info {
-  margin-top: 8px; padding: 8px 10px;
-  background: rgba(16,142,233,0.06); border-radius: var(--radius-md);
-  border-left: 3px solid var(--color-primary); font-size: 11px; color: var(--color-text-secondary);
+
+/* Score + label row */
+.attr-score-row {
+  display: flex; align-items: center; gap: 10px;
 }
+.attr-score-row__score { font-size: 12px; color: var(--color-text-secondary); }
+.attr-score-row__score strong { color: var(--color-text-primary); }
+
+/* Override history block */
+.attr-override-history {
+  padding: 10px 12px; border-radius: var(--radius-md);
+  background: #FFFBEB; border: 1px solid #FDE68A; border-left: 3px solid #F59E0B;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.attr-override-history__heading {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: #92400E; margin-bottom: 2px;
+}
+.attr-override-history__row {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+}
+.attr-override-history__by { font-size: 12px; font-weight: 600; color: var(--color-text-primary); }
+.attr-override-history__date { font-size: 11px; color: var(--color-text-muted); }
+.attr-override-history__change { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; }
+.attr-override-history__reason { font-size: 11px; color: var(--color-text-muted); font-style: italic; }
+
+/* Score methodology */
+.attr-methodology {
+  padding-top: 10px; border-top: 1px solid var(--color-border-light);
+}
+.attr-methodology__label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--color-text-muted); margin-bottom: 4px;
+}
+.attr-methodology__text { font-size: 11px; color: var(--color-text-secondary); line-height: 1.6; }
 
 /* ── Undo / Countdown ───────────────────────────────────────── */
 .undo-wrap { display: flex; align-items: center; gap: 6px; }

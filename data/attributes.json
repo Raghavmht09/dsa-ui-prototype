@@ -7,6 +7,7 @@
         {
           "id": "attr_title",
           "name": "Product Title",
+          "referenceValue": "Neutrogena Hydro Boost Water Gel Moisturizer 1.7 oz",
           "systemValue": "Neutrogena Hydro Boost Water Gel Moisturizer, 1.7 oz",
           "systemScore": 95,
           "displayLabel": "Correct",
@@ -21,6 +22,7 @@
         {
           "id": "attr_brand",
           "name": "Brand",
+          "referenceValue": "Neutrogena",
           "systemValue": "Neutrogena",
           "systemScore": 99,
           "displayLabel": "Correct",
@@ -35,6 +37,7 @@
         {
           "id": "attr_size",
           "name": "Size / Volume",
+          "referenceValue": "1.7 fl oz",
           "systemValue": "1.7 oz",
           "systemScore": 93,
           "displayLabel": "Correct",
@@ -49,6 +52,7 @@
         {
           "id": "attr_ingredients",
           "name": "Ingredients List",
+          "referenceValue": "Water, Dimethicone, Glycerin, Hyaluronic Acid, Panthenol, PEG-100 Stearate, Glyceryl Stearate, Dimethiconol, Carbomer, Sodium Hydroxide, Ethylhexylglycerin, Phenoxyethanol",
           "systemValue": "Water, Dimethicone, Glycerin, Hyaluronic Acid...",
           "systemScore": 88,
           "displayLabel": "Correct",
@@ -63,6 +67,7 @@
         {
           "id": "attr_images",
           "name": "Product Images",
+          "referenceValue": "7 reference images provided",
           "systemValue": "6 images detected",
           "systemScore": 91,
           "displayLabel": "Correct",
@@ -77,6 +82,7 @@
         {
           "id": "attr_description",
           "name": "Short Description",
+          "referenceValue": "Neutrogena Hydro Boost Water Gel moisturizer delivers continuous hydration to keep skin looking smooth, supple and hydrated. Its key ingredient, Hyaluronic Acid, attracts moisture and locks it in for 24-hour hydration.",
           "systemValue": "Hydro Boost Water Gel moisturizer with hyaluronic acid...",
           "systemScore": 85,
           "displayLabel": "Correct",
@@ -97,6 +103,7 @@
         {
           "id": "attr_title",
           "name": "Product Title",
+          "referenceValue": "Neutrogena Hydro Boost Water Gel Moisturizer 1.7 oz",
           "systemValue": "Neutrogena Hydro Boost Water Gel Moisturizer 1.7 Fl Oz (Pack of 1)",
           "systemScore": 80,
           "displayLabel": "Correct",
@@ -111,6 +118,7 @@
         {
           "id": "attr_brand",
           "name": "Brand",
+          "referenceValue": "Neutrogena",
           "systemValue": "Neutrogena",
           "systemScore": 99,
           "displayLabel": "Correct",
@@ -125,6 +133,7 @@
         {
           "id": "attr_size",
           "name": "Size / Volume",
+          "referenceValue": "1.7 fl oz",
           "systemValue": "1.7 Fl Oz",
           "systemScore": 90,
           "displayLabel": "Correct",
@@ -139,6 +148,7 @@
         {
           "id": "attr_ingredients",
           "name": "Ingredients List",
+          "referenceValue": "Water, Dimethicone, Glycerin, Hyaluronic Acid, Panthenol, PEG-100 Stearate, Glyceryl Stearate, Dimethiconol, Carbomer, Sodium Hydroxide, Ethylhexylglycerin, Phenoxyethanol",
           "systemValue": "Partially listed — missing preservatives section",
           "systemScore": 62,
           "displayLabel": "Incorrect",
@@ -153,6 +163,7 @@
         {
           "id": "attr_images",
           "name": "Product Images",
+          "referenceValue": "7 reference images provided",
           "systemValue": "3 images detected",
           "systemScore": 71,
           "displayLabel": "Correct",
@@ -167,6 +178,7 @@
         {
           "id": "attr_description",
           "name": "Short Description",
+          "referenceValue": "Neutrogena Hydro Boost Water Gel moisturizer delivers continuous hydration to keep skin looking smooth, supple and hydrated. Its key ingredient, Hyaluronic Acid, attracts moisture and locks it in for 24-hour hydration.",
           "systemValue": "Fast-absorbing gel moisturizer with Hyaluronic Acid",
           "systemScore": 77,
           "displayLabel": "Correct",
@@ -189,6 +201,7 @@
         {
           "id": "attr_title",
           "name": "Product Title",
+          "referenceValue": "Colgate Total Whitening Toothpaste 4.8 oz",
           "systemValue": "Colgate Total Whitening Toothpaste, 4.8 oz",
           "systemScore": 58,
           "displayLabel": "Incorrect",
@@ -203,6 +216,7 @@
         {
           "id": "attr_brand",
           "name": "Brand",
+          "referenceValue": "Colgate",
           "systemValue": "Colgate",
           "systemScore": 99,
           "displayLabel": "Correct",
@@ -217,6 +231,7 @@
         {
           "id": "attr_size",
           "name": "Size / Volume",
+          "referenceValue": "4.8 oz",
           "systemValue": "4.8 oz",
           "systemScore": 91,
           "displayLabel": "Correct",
@@ -231,6 +246,7 @@
         {
           "id": "attr_active_ingredients",
           "name": "Active Ingredients",
+          "referenceValue": "Sodium Fluoride 0.243% (fluoride ion 0.16%), Triclosan 0.30%",
           "systemValue": "Sodium Fluoride 0.243%",
           "systemScore": 45,
           "displayLabel": "Incorrect",
@@ -245,6 +261,7 @@
         {
           "id": "attr_images",
           "name": "Product Images",
+          "referenceValue": "6 reference images provided",
           "systemValue": "2 images detected",
           "systemScore": 50,
           "displayLabel": "Incorrect",
@@ -259,6 +276,7 @@
         {
           "id": "attr_description",
           "name": "Short Description",
+          "referenceValue": "Colgate Total Whitening Toothpaste fights cavities, tartar, plaque, stains, gingivitis, and bad breath for a complete oral health solution in every brush.",
           "systemValue": "Total whitening toothpaste for cavity protection",
           "systemScore": 52,
           "displayLabel": "Incorrect",
@@ -279,6 +297,7 @@
         {
           "id": "attr_title",
           "name": "Product Title",
+          "referenceValue": "Colgate Total Whitening Toothpaste 4.8 oz",
           "systemValue": "Colgate Total Whitening Toothpaste Mint — 4.8oz",
           "systemScore": 65,
           "displayLabel": "Incorrect",
@@ -293,6 +312,7 @@
         {
           "id": "attr_brand",
           "name": "Brand",
+          "referenceValue": "Colgate",
           "systemValue": "Colgate",
           "systemScore": 99,
           "displayLabel": "Correct",
@@ -307,6 +327,7 @@
         {
           "id": "attr_size",
           "name": "Size / Volume",
+          "referenceValue": "4.8 oz",
           "systemValue": "4.8oz",
           "systemScore": 95,
           "displayLabel": "Correct",
@@ -321,6 +342,7 @@
         {
           "id": "attr_active_ingredients",
           "name": "Active Ingredients",
+          "referenceValue": "Sodium Fluoride 0.243% (fluoride ion 0.16%), Triclosan 0.30%",
           "systemValue": "Sodium Fluoride 0.243%",
           "systemScore": 72,
           "displayLabel": "Correct",
@@ -335,6 +357,7 @@
         {
           "id": "attr_images",
           "name": "Product Images",
+          "referenceValue": "6 reference images provided",
           "systemValue": "5 images detected",
           "systemScore": 80,
           "displayLabel": "Correct",

@@ -668,7 +668,6 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
       ${expandBtn}
       <div class="attr-name-cell">
         <span class="attr-name">${attr.name}</span>
-        <button class="info-btn" title="Score methodology">i</button>
         ${isModified ? '<span class="modified-badge">Modified</span>' : ''}
         ${metaHtml}
       </div>
@@ -695,25 +694,6 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
       }
     });
 
-    // Wire info button
-    row.querySelector('.info-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const btn = e.currentTarget;
-      const existing = rowWrap.querySelector('.attr-info-panel');
-      if (existing) {
-        existing.remove();
-        btn.classList.remove('active');
-      } else {
-        btn.classList.add('active');
-        const panel = document.createElement('div');
-        panel.className = 'attr-info-panel';
-        const methodology = ATTR_SCORE_INFO[attr.name] || 'Score reflects how closely this attribute matches the brand reference across key quality dimensions. Weights are configured in Score Configuration settings.';
-        panel.innerHTML = `
-          <div class="attr-info-panel__heading">Score methodology — ${attr.name}</div>
-          <p class="attr-info-panel__desc">${methodology}</p>`;
-        rowWrap.appendChild(panel);
-      }
-    });
 
     // Wire Update button
     if (canOverride && !isPending) {
@@ -779,8 +759,8 @@ function buildAttrExpanded(attr, key, override, ctx = {}) {
   const isImage = attr.name.toLowerCase().includes('image');
   const isSecondaryImage = attr.name.toLowerCase().includes('secondary');
 
+  // ── Secondary images: per-image override section ──────────────
   if (isImage && isSecondaryImage && product && retailerId) {
-    // Per-image section: 3 synthetic secondary image rows with independent override
     const perImageSection = document.createElement('div');
     perImageSection.className = 'per-image-section';
     perImageSection.innerHTML = `
@@ -863,42 +843,86 @@ function buildAttrExpanded(attr, key, override, ctx = {}) {
     });
 
     div.appendChild(perImageSection);
+
+  // ── Primary image: reference vs actual placeholders ───────────
   } else if (isImage) {
-    div.innerHTML = `
-      <div class="attr-expanded__img-compare">
-        <div class="attr-expanded__img-col">
-          <div class="attr-expanded__img-label">Reference image</div>
-          <div class="attr-expanded__img"><div class="attr-expanded__img-placeholder">Reference image not available</div></div>
-        </div>
-        <div class="attr-expanded__img-col">
-          <div class="attr-expanded__img-label">Actual image</div>
-          <div class="attr-expanded__img"><div class="attr-expanded__img-placeholder">Actual image not available</div></div>
-        </div>
+    const compareEl = document.createElement('div');
+    compareEl.className = 'attr-compare attr-compare--images';
+    compareEl.innerHTML = `
+      <div class="attr-compare__col">
+        <div class="attr-compare__label">Reference</div>
+        <div class="attr-expanded__img"><div class="attr-expanded__img-placeholder">Reference image not available</div></div>
+      </div>
+      <div class="attr-compare__col">
+        <div class="attr-compare__label">Actual (Crawled)</div>
+        <div class="attr-expanded__img"><div class="attr-expanded__img-placeholder">Actual image not available</div></div>
       </div>`;
+    div.appendChild(compareEl);
+
+  // ── Text attribute: reference vs actual side-by-side ─────────
+  } else {
+    const refVal = attr.referenceValue || '—';
+    const actVal = attr.systemValue || '—';
+    const compareEl = document.createElement('div');
+    compareEl.className = 'attr-compare';
+    compareEl.innerHTML = `
+      <div class="attr-compare__col">
+        <div class="attr-compare__label">Reference</div>
+        <div class="attr-compare__value">${refVal}</div>
+      </div>
+      <div class="attr-compare__col">
+        <div class="attr-compare__label">Actual (Crawled)</div>
+        <div class="attr-compare__value">${actVal}</div>
+      </div>`;
+    div.appendChild(compareEl);
   }
 
-  const score = override?.score ?? attr.systemScore;
-  const metaItems = [
-    ['Score', typeof score === 'number' ? score : '—'],
-    ['System value', attr.systemValue || '—'],
-    ['Attribute type', attr.attributeType || attr.name],
-  ];
+  // ── Score + label row ─────────────────────────────────────────
+  const effectiveScore = override?.score ?? attr.systemScore;
+  const effectiveLabel = override?.label ?? attr.displayLabel;
+  const lblClass = effectiveLabel === 'Correct' ? 'correct' : effectiveLabel === 'Incorrect' ? 'incorrect' : 'review';
+
+  const scoreRow = document.createElement('div');
+  scoreRow.className = 'attr-score-row';
+  scoreRow.innerHTML = `
+    <span class="attr-score-row__score">Score: <strong>${effectiveScore}</strong></span>
+    <span class="status-pill status-pill--${lblClass}">${effectiveLabel}</span>`;
+  div.appendChild(scoreRow);
+
+  // ── Override history (when modified) ─────────────────────────
   if (override) {
-    metaItems.push(['Override by', override.by || '—']);
-    if (override.reason) metaItems.push(['Reason', override.reason]);
+    const d = override.at ? new Date(override.at) : null;
+    const dateStr = d
+      ? d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', timeZone:'UTC' })
+        + ' · ' + d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', timeZone:'UTC', hour12:true }) + ' UTC'
+      : '';
+    const oldLbl = override.oldLabel || attr.displayLabel;
+    const changeLine = override.score != null
+      ? `Score ${override.oldScore ?? attr.systemScore} → ${override.score} (${oldLbl} → ${override.label})`
+      : `${oldLbl} → ${override.label}`;
+
+    const histEl = document.createElement('div');
+    histEl.className = 'attr-override-history';
+    histEl.innerHTML = `
+      <div class="attr-override-history__heading">Override applied</div>
+      <div class="attr-override-history__row">
+        <span class="attr-override-history__by">${override.by}</span>
+        ${dateStr ? `<span class="attr-override-history__date">${dateStr}</span>` : ''}
+      </div>
+      <div class="attr-override-history__change">${changeLine}</div>
+      ${override.reason ? `<div class="attr-override-history__reason">Reason: ${override.reason}</div>` : ''}`;
+    div.appendChild(histEl);
   }
 
-  const meta = document.createElement('div');
-  meta.className = 'attr-expanded__meta';
-  metaItems.forEach(([label, val]) => {
-    meta.innerHTML += `<div class="attr-meta-row"><span class="attr-meta-row__label">${label}</span><span class="attr-meta-row__val">${val}</span></div>`;
-  });
+  // ── Score methodology ─────────────────────────────────────────
+  const methodology = ATTR_SCORE_INFO[attr.name] || 'Score reflects how closely this attribute matches the brand reference across key quality dimensions.';
+  const methEl = document.createElement('div');
+  methEl.className = 'attr-methodology';
+  methEl.innerHTML = `
+    <div class="attr-methodology__label">Score methodology</div>
+    <div class="attr-methodology__text">${methodology}</div>`;
+  div.appendChild(methEl);
 
-  if (override) {
-    meta.innerHTML += `<div class="attr-override-info">Manually overridden — score recompute scheduled for next run</div>`;
-  }
-
-  div.appendChild(meta);
   return div;
 }
 
