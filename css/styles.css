@@ -357,10 +357,11 @@ img { display: block; max-width: 100%; }
 
 /* Column headers */
 .attr-col-headers {
-  display: grid; grid-template-columns: 26px 1fr 70px 110px 96px;
+  display: grid; grid-template-columns: 26px 1fr 110px 96px;
   gap: 8px; padding: 7px 16px; background: #F8FAFD;
   border-bottom: 1px solid var(--color-border-light);
 }
+.attr-col-headers--score-mode { grid-template-columns: 26px 1fr 70px 96px; }
 .attr-col-hdr {
   font-size: 10px; font-weight: 700; color: var(--color-text-muted);
   text-transform: uppercase; letter-spacing: 0.06em;
@@ -370,10 +371,11 @@ img { display: block; max-width: 100%; }
 .attr-row-wrap { border-bottom: 1px solid var(--color-border-light); }
 .attr-row-wrap:last-child { border-bottom: none; }
 .attr-row {
-  display: grid; grid-template-columns: 26px 1fr 70px 110px 96px;
+  display: grid; grid-template-columns: 26px 1fr 110px 96px;
   gap: 8px; padding: 11px 16px; align-items: center; min-height: 52px;
   transition: background 0.10s;
 }
+.attr-row--score-mode { grid-template-columns: 26px 1fr 70px 96px; }
 .attr-row:hover { background: #FAFCFF; }
 .attr-row--modified { background: rgba(16,142,233,0.03); }
 .attr-row--pending  { background: rgba(255,222,76,0.04); }
@@ -463,6 +465,7 @@ img { display: block; max-width: 100%; }
 }
 .attr-score-row__score { font-size: 12px; color: var(--color-text-secondary); }
 .attr-score-row__score strong { color: var(--color-text-primary); }
+.attr-score-row__label-prefix { font-size: 12px; color: var(--color-text-secondary); margin-right: 6px; }
 
 /* Override history block */
 .attr-override-history {
@@ -818,6 +821,13 @@ img { display: block; max-width: 100%; }
 .threshold-pill--correct   { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
 .threshold-pill--review    { background: #FFFBEB; color: #92400E; border-color: #FDE68A; }
 .threshold-pill--incorrect { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+.threshold-label-input {
+  background: transparent; border: none; border-bottom: 1.5px solid currentColor;
+  color: inherit; font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+  width: 100%; padding: 1px 0 2px; outline: none; text-align: center; cursor: text;
+  opacity: 0.85;
+}
+.threshold-label-input:focus { opacity: 1; }
 .threshold-input {
   width: 68px; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: var(--radius-md);
   font-size: 13px; font-weight: 600; text-align: center; outline: none; background: #fff;

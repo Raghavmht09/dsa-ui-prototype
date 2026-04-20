@@ -596,12 +596,13 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
   }
 
   // Column headers
+  const mode = STATE.config.overrideMode || 'label';
+  const colMidHdr = mode === 'score' ? 'Score' : 'Label';
   body.innerHTML += `
-    <div class="attr-col-headers">
+    <div class="attr-col-headers${mode === 'score' ? ' attr-col-headers--score-mode' : ''}">
       <div class="attr-col-hdr"></div>
       <div class="attr-col-hdr">Attribute</div>
-      <div class="attr-col-hdr">Score</div>
-      <div class="attr-col-hdr">Label</div>
+      <div class="attr-col-hdr">${colMidHdr}</div>
       <div class="attr-col-hdr">${canOverride ? 'Action' : ''}</div>
     </div>`;
 
@@ -620,7 +621,7 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
     rowWrap.className = 'attr-row-wrap';
 
     const row = document.createElement('div');
-    row.className = `attr-row${isModified ? ' attr-row--modified' : ''}${isPending ? ' attr-row--pending' : ''}`;
+    row.className = `attr-row${mode === 'score' ? ' attr-row--score-mode' : ''}${isModified ? ' attr-row--modified' : ''}${isPending ? ' attr-row--pending' : ''}`;
     row.dataset.attrKey = key;
 
     const scoreDisplay = (typeof attr.systemScore === 'number' && !isNaN(attr.systemScore))
@@ -664,6 +665,9 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
       }
     }
 
+    const middleCell = mode === 'score'
+      ? scoreDisplay
+      : `<div><span class="status-pill status-pill--${labelClass}">${effectiveLabel}</span></div>`;
     row.innerHTML = `
       ${expandBtn}
       <div class="attr-name-cell">
@@ -671,8 +675,7 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
         ${isModified ? '<span class="modified-badge">Modified</span>' : ''}
         ${metaHtml}
       </div>
-      ${scoreDisplay}
-      <div><span class="status-pill status-pill--${labelClass}">${effectiveLabel}</span></div>
+      ${middleCell}
       <div>${actionCell}</div>`;
 
     rowWrap.appendChild(row);
@@ -878,15 +881,18 @@ function buildAttrExpanded(attr, key, override, ctx = {}) {
   }
 
   // ── Score + label row ─────────────────────────────────────────
+  const expandMode = STATE.config.overrideMode || 'label';
   const effectiveScore = override?.score ?? attr.systemScore;
   const effectiveLabel = override?.label ?? attr.displayLabel;
-  const lblClass = effectiveLabel === 'Correct' ? 'correct' : effectiveLabel === 'Incorrect' ? 'incorrect' : 'review';
+  const lblClass = effectiveLabel === getConfigLabel('correct') ? 'correct' : effectiveLabel === getConfigLabel('incorrect') ? 'incorrect' : 'review';
 
   const scoreRow = document.createElement('div');
   scoreRow.className = 'attr-score-row';
-  scoreRow.innerHTML = `
-    <span class="attr-score-row__score">Score: <strong>${effectiveScore}</strong></span>
-    <span class="status-pill status-pill--${lblClass}">${effectiveLabel}</span>`;
+  if (expandMode === 'score') {
+    scoreRow.innerHTML = `<span class="attr-score-row__score">Score: <strong>${effectiveScore}</strong></span>`;
+  } else {
+    scoreRow.innerHTML = `<span class="attr-score-row__label-prefix">Label:</span><span class="status-pill status-pill--${lblClass}">${effectiveLabel}</span>`;
+  }
   div.appendChild(scoreRow);
 
   // ── Override history (when modified) ─────────────────────────
@@ -1760,7 +1766,9 @@ function renderSettingsConfig(container) {
           <div class="threshold-config" id="thresholdConfig">
             <div class="threshold-visual" id="thresholdVisual"></div>
             <div class="threshold-row">
-              <div class="threshold-pill threshold-pill--correct">Correct</div>
+              <div class="threshold-pill threshold-pill--correct">
+                <input type="text" class="threshold-label-input" id="correctLabelName" placeholder="Correct" maxlength="20" title="Edit label name" />
+              </div>
               <div class="threshold-range">
                 <label>Min score</label>
                 <input type="number" id="correctMin" min="0" max="100" class="threshold-input" />
@@ -1768,7 +1776,9 @@ function renderSettingsConfig(container) {
               </div>
             </div>
             <div class="threshold-row threshold-row--derived">
-              <div class="threshold-pill threshold-pill--incorrect">Incorrect</div>
+              <div class="threshold-pill threshold-pill--incorrect">
+                <input type="text" class="threshold-label-input" id="incorrectLabelName" placeholder="Incorrect" maxlength="20" title="Edit label name" />
+              </div>
               <div class="threshold-range threshold-range--derived">
                 <span id="incorrectRangeDerived">0 — 79 (derived)</span>
               </div>
@@ -1781,14 +1791,14 @@ function renderSettingsConfig(container) {
             <div class="config-zone-item">
               <div class="config-zone-swatch config-zone-swatch--correct"></div>
               <div class="config-zone-text">
-                <strong>Correct</strong>
+                <strong>${getConfigLabel('correct')}</strong>
                 <p>Content closely matches the brand reference. No action required.</p>
               </div>
             </div>
             <div class="config-zone-item">
               <div class="config-zone-swatch config-zone-swatch--incorrect"></div>
               <div class="config-zone-text">
-                <strong>Incorrect</strong>
+                <strong>${getConfigLabel('incorrect')}</strong>
                 <p>Significant mismatch vs brand reference. Override or re-crawl required.</p>
               </div>
             </div>
@@ -1907,7 +1917,11 @@ function renderSettingsConfig(container) {
   // Thresholds
   const correctMinEl = container.querySelector('#correctMin');
   const incorrectRangeEl = container.querySelector('#incorrectRangeDerived');
+  const correctLabelInput = container.querySelector('#correctLabelName');
+  const incorrectLabelInput = container.querySelector('#incorrectLabelName');
   correctMinEl.value = STATE.config.scoreThresholds.correct_min;
+  if (correctLabelInput) correctLabelInput.value = getConfigLabel('correct');
+  if (incorrectLabelInput) incorrectLabelInput.value = getConfigLabel('incorrect');
 
   function updateVisual() {
     const cMin = parseInt(correctMinEl.value) || 80;
@@ -1924,6 +1938,11 @@ function renderSettingsConfig(container) {
 
   container.querySelector('#saveThresholdsBtn').addEventListener('click', () => {
     STATE.config.scoreThresholds.correct_min = parseInt(correctMinEl.value);
+    if (!STATE.config.scoreThresholds.labels) STATE.config.scoreThresholds.labels = {};
+    const cName = correctLabelInput?.value.trim() || 'Correct';
+    const iName = incorrectLabelInput?.value.trim() || 'Incorrect';
+    STATE.config.scoreThresholds.labels.correct   = { ...STATE.config.scoreThresholds.labels.correct, label: cName };
+    STATE.config.scoreThresholds.labels.incorrect = { ...STATE.config.scoreThresholds.labels.incorrect, label: iName };
     showToast('Thresholds saved', 'success');
   });
 
@@ -2151,19 +2170,24 @@ function generateSyntheticAttrs(product) {
 // ════════════════════════════════════════════════════════════════
 //  UTILITIES
 // ════════════════════════════════════════════════════════════════
+function getConfigLabel(key) {
+  return STATE.config?.scoreThresholds?.labels?.[key]?.label || (key === 'correct' ? 'Correct' : 'Incorrect');
+}
 function scoreToLabel(score) {
   const s = parseInt(score);
-  if (isNaN(s)) return 'Incorrect';
   const t = STATE.config.scoreThresholds || {};
-  return s >= (t.correct_min ?? 80) ? 'Correct' : 'Incorrect';
+  if (isNaN(s)) return getConfigLabel('incorrect');
+  return s >= (t.correct_min ?? 80) ? getConfigLabel('correct') : getConfigLabel('incorrect');
 }
 function scoreToLabelClass(score) {
-  return scoreToLabel(score) === 'Correct' ? 'correct' : 'incorrect';
+  const s = parseInt(score);
+  const t = STATE.config.scoreThresholds || {};
+  return (isNaN(s) || s < (t.correct_min ?? 80)) ? 'incorrect' : 'correct';
 }
 function labelClass(label) {
-  if (label === 'Correct') return 'correct';
-  if (label === 'Incorrect') return 'incorrect';
-  return 'review'; // covers 'Correct - Slightly Modified' and other override states
+  if (label === getConfigLabel('correct')) return 'correct';
+  if (label === getConfigLabel('incorrect')) return 'incorrect';
+  return 'review';
 }
 function formatDateTime(iso) {
   if (!iso) return '—';
