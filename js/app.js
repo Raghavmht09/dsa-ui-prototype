@@ -597,12 +597,12 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
 
   // Column headers
   const mode = STATE.config.overrideMode || 'label';
-  const colMidHdr = mode === 'score' ? 'Score' : 'Label';
   body.innerHTML += `
-    <div class="attr-col-headers${mode === 'score' ? ' attr-col-headers--score-mode' : ''}">
+    <div class="attr-col-headers">
       <div class="attr-col-hdr"></div>
       <div class="attr-col-hdr">Attribute</div>
-      <div class="attr-col-hdr">${colMidHdr}</div>
+      <div class="attr-col-hdr">${mode === 'score' ? 'Score' : ''}</div>
+      <div class="attr-col-hdr">${mode === 'label' ? 'Label' : ''}</div>
       <div class="attr-col-hdr">${canOverride ? 'Action' : ''}</div>
     </div>`;
 
@@ -621,7 +621,7 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
     rowWrap.className = 'attr-row-wrap';
 
     const row = document.createElement('div');
-    row.className = `attr-row${mode === 'score' ? ' attr-row--score-mode' : ''}${isModified ? ' attr-row--modified' : ''}${isPending ? ' attr-row--pending' : ''}`;
+    row.className = `attr-row${isModified ? ' attr-row--modified' : ''}${isPending ? ' attr-row--pending' : ''}`;
     row.dataset.attrKey = key;
 
     const scoreDisplay = (typeof attr.systemScore === 'number' && !isNaN(attr.systemScore))
@@ -665,9 +665,6 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
       }
     }
 
-    const middleCell = mode === 'score'
-      ? scoreDisplay
-      : `<div><span class="status-pill status-pill--${labelClass}">${effectiveLabel}</span></div>`;
     row.innerHTML = `
       ${expandBtn}
       <div class="attr-name-cell">
@@ -675,7 +672,8 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
         ${isModified ? '<span class="modified-badge">Modified</span>' : ''}
         ${metaHtml}
       </div>
-      ${middleCell}
+      ${mode === 'score' ? scoreDisplay : '<div></div>'}
+      ${mode === 'label' ? `<div><span class="status-pill status-pill--${labelClass}">${effectiveLabel}</span></div>` : '<div></div>'}
       <div>${actionCell}</div>`;
 
     rowWrap.appendChild(row);
