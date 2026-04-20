@@ -848,14 +848,14 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
         <label class="field-label">Reason <span class="optional-tag">Optional</span></label>
         <select id="overrideReasonCode" class="override-reason-select">
           <option value="">— Select a reason (optional) —</option>
-          <option value="OR-01">OR-01 — Image marketing label</option>
-          <option value="OR-02">OR-02 — Image typography / topology</option>
-          <option value="OR-03">OR-03 — Text rephrasing</option>
-          <option value="OR-04">OR-04 — Regional / language adaptation</option>
-          <option value="OR-05">OR-05 — Character / formatting difference</option>
-          <option value="OR-06">OR-06 — Truncation</option>
-          <option value="OR-07">OR-07 — Secondary image ordering</option>
-          <option value="OR-08">OR-08 — Other</option>
+          <option value="OR-01">Image marketing label</option>
+          <option value="OR-02">Image typography / topology</option>
+          <option value="OR-03">Text rephrasing</option>
+          <option value="OR-04">Regional / language adaptation</option>
+          <option value="OR-05">Character / formatting difference</option>
+          <option value="OR-06">Truncation</option>
+          <option value="OR-07">Secondary image ordering</option>
+          <option value="OR-08">Other</option>
         </select>
         <div id="overrideOtherWrap" class="override-other-wrap" style="display:none">
           <textarea rows="2" placeholder="Describe the variation (encouraged, not required)…" id="overrideReason">${override?.reason || ''}</textarea>
