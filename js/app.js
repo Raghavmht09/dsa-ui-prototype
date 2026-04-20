@@ -1510,31 +1510,35 @@ function buildAuditRow(entry) {
   const row = document.createElement('div');
   row.className = 'audit-row' + (entry.productId ? ' audit-row--clickable' : '');
 
-  const labels = { label_override: 'Label Override', score_override: 'Score Override', config_change: 'Config Change', user_invited: 'User Invited' };
+  const actionIcons = {
+    label_override: '🏷️',
+    score_override: '📊',
+    config_change: '⚙️',
+    user_invited: '👤',
+  };
 
-  const changeDesc = entry.productTitle
-    ? `<strong>${entry.productTitle}</strong>${entry.retailerName ? ` @ ${entry.retailerName}` : ''}${entry.attributeName ? ` — ${entry.attributeName}` : ''}`
-    : (entry.reason || '—');
+  const changeText = (entry.previousLabel && entry.newLabel)
+    ? `${entry.previousLabel} → ${entry.newLabel}`
+    : (entry.previousScore != null && entry.newScore != null ? `${entry.previousScore} → ${entry.newScore}` : '');
 
-  const labelChange = (entry.previousLabel && entry.newLabel)
-    ? `<span class="audit-label-change"><span class="status-pill status-pill--${labelClass(entry.previousLabel)}">${entry.previousLabel}</span> → <span class="status-pill status-pill--${labelClass(entry.newLabel)}">${entry.newLabel}</span></span>` : '';
-
-  const scoreChange = (entry.previousScore != null && entry.newScore != null)
-    ? `<span class="audit-score-change">${entry.previousScore} → ${entry.newScore}</span>` : '';
+  const prodInfo = entry.productTitle
+    ? `${entry.productTitle}${entry.attributeName ? ` / ${entry.attributeName}` : ''}`
+    : '—';
 
   row.innerHTML = `
-    <div class="audit-row__type-dot audit-row__type-dot--${entry.action}"></div>
-    <div class="audit-row__body">
-      <div class="audit-row__top">
-        <span class="audit-action-badge audit-action-badge--${entry.action}">${labels[entry.action] || entry.action}</span>
-        <span class="audit-row__actor">${entry.actor.name}</span>
-        <span class="role-badge role-badge--${entry.actor.role}">${entry.actor.role}</span>
+    <div class="audit-row__icon">${actionIcons[entry.action] || '•'}</div>
+    <div class="audit-row__content">
+      <div class="audit-row__header">
+        <div class="audit-row__main">
+          <span class="audit-row__product">${prodInfo}</span>
+          ${entry.retailerName ? `<span class="audit-row__retailer">${entry.retailerName}</span>` : ''}
+        </div>
         <span class="audit-row__time">${formatDateTime(entry.timestamp)}</span>
       </div>
-      <div class="audit-row__desc">${changeDesc}</div>
-      <div class="audit-row__changes">${labelChange}${scoreChange}</div>
-      ${entry.reason ? `<div class="audit-row__reason">"${entry.reason}"</div>` : ''}
-      ${entry.propagationTriggered ? `<div class="audit-row__propagation">↪ Score recompute scheduled: ${entry.scheduledRecompute ? formatDateTime(entry.scheduledRecompute) : 'next run'}</div>` : ''}
+      <div class="audit-row__change">${changeText}</div>
+      <div class="audit-row__footer">
+        <span class="audit-row__actor">${entry.actor.name}</span>
+      </div>
     </div>`;
 
   if (entry.productId) {
