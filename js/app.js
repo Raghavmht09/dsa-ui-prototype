@@ -758,7 +758,7 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
     // Render undo countdown if pending
     if (isPending) {
       const undoCell = row.querySelector(`#undo-${key.replace(/:/g,'_')}`);
-      if (undoCell) renderUndoCountdown(undoCell, key, product, retailerId, attr, panelRef);
+      if (undoCell) renderUndoCountdown(undoCell, key, product, retailerId, attr, section, panelRef);
     }
   });
 
@@ -1271,7 +1271,7 @@ function refreshAttrSection(attrSection, product, retailerId, panelRef) {
 }
 
 // ── Undo Countdown ────────────────────────────────────────────────
-function renderUndoCountdown(cell, key, product, retailerId, attr, panelRef) {
+function renderUndoCountdown(cell, key, product, retailerId, attr, attrSection, panelRef) {
   const pending = STATE.pendingUndo[key];
   if (!pending) return;
   const secs = STATE.config.countdownTimer?.durationSeconds ?? 10;
@@ -1288,9 +1288,8 @@ function renderUndoCountdown(cell, key, product, retailerId, attr, panelRef) {
   cell.appendChild(btn);
   cell.appendChild(timer);
 
-  const section = cell.closest('.attr-table-section');
   btn.addEventListener('click', () => {
-    if (section) undoOverride(key, product, retailerId, attr, section, panelRef);
+    undoOverride(key, product, retailerId, attr, attrSection, panelRef);
   });
 
   const interval = setInterval(() => {
