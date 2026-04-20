@@ -1510,35 +1510,29 @@ function buildAuditRow(entry) {
   const row = document.createElement('div');
   row.className = 'audit-row' + (entry.productId ? ' audit-row--clickable' : '');
 
-  const actionIcons = {
-    label_override: '🏷️',
-    score_override: '📊',
-    config_change: '⚙️',
-    user_invited: '👤',
-  };
+  const initials = entry.actor.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
   const changeText = (entry.previousLabel && entry.newLabel)
     ? `${entry.previousLabel} → ${entry.newLabel}`
     : (entry.previousScore != null && entry.newScore != null ? `${entry.previousScore} → ${entry.newScore}` : '');
 
-  const prodInfo = entry.productTitle
-    ? `${entry.productTitle}${entry.attributeName ? ` / ${entry.attributeName}` : ''}`
-    : '—';
+  const descParts = [];
+  if (entry.attributeName) descParts.push(entry.attributeName);
+  if (entry.productTitle)   descParts.push(entry.productTitle);
 
   row.innerHTML = `
-    <div class="audit-row__icon">${actionIcons[entry.action] || '•'}</div>
+    <div class="audit-avatar">${initials}</div>
     <div class="audit-row__content">
       <div class="audit-row__header">
-        <div class="audit-row__main">
-          <span class="audit-row__product">${prodInfo}</span>
-          ${entry.retailerName ? `<span class="audit-row__retailer">${entry.retailerName}</span>` : ''}
-        </div>
+        <span class="audit-row__actor">${entry.actor.name}</span>
         <span class="audit-row__time">${formatDateTime(entry.timestamp)}</span>
       </div>
-      <div class="audit-row__change">${changeText}</div>
-      <div class="audit-row__footer">
-        <span class="audit-row__actor">${entry.actor.name}</span>
-      </div>
+      ${descParts.length ? `<div class="audit-row__desc">${descParts.join(' · ')}${entry.retailerName ? `<span class="audit-row__retailer"> @ ${entry.retailerName}</span>` : ''}</div>` : ''}
+      ${changeText || entry.reason ? `
+      <div class="audit-row__bottom">
+        ${changeText ? `<span class="audit-row__change">${changeText}</span>` : ''}
+        ${entry.reason ? `<span class="audit-row__reason">· "${entry.reason}"</span>` : ''}
+      </div>` : ''}
     </div>`;
 
   if (entry.productId) {
