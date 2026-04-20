@@ -635,7 +635,12 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
     const expandBtn = `<button class="expand-btn" data-attr-key="${key}" title="Expand">+</button>`;
 
     const metaHtml = (isModified && override?.by)
-      ? `<span class="attr-override-meta">overridden by ${override.by}</span>` : '';
+      ? (() => {
+          const ts = override.at ? new Date(override.at).toUTCString().replace(' GMT','  UTC') : '';
+          const reasonText = override.reason ? ` · ${override.reason}` : '';
+          const tooltip = `Last action: ${override.by} · ${override.label}${reasonText}\n${ts}`;
+          return `<button class="info-icon-btn" title="${tooltip}" aria-label="Override history">ⓘ</button>`;
+        })() : '';
 
     let actionCell = '';
     if (canOverride) {
@@ -841,7 +846,20 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
 
       <div class="override-popup__reason">
         <label class="field-label">Reason <span class="optional-tag">Optional</span></label>
-        <textarea rows="2" placeholder="Explain why you're making this change…" id="overrideReason">${override?.reason || ''}</textarea>
+        <select id="overrideReasonCode" class="override-reason-select">
+          <option value="">— Select a reason (optional) —</option>
+          <option value="OR-01">OR-01 — Image marketing label</option>
+          <option value="OR-02">OR-02 — Image typography / topology</option>
+          <option value="OR-03">OR-03 — Text rephrasing</option>
+          <option value="OR-04">OR-04 — Regional / language adaptation</option>
+          <option value="OR-05">OR-05 — Character / formatting difference</option>
+          <option value="OR-06">OR-06 — Truncation</option>
+          <option value="OR-07">OR-07 — Secondary image ordering</option>
+          <option value="OR-08">OR-08 — Other</option>
+        </select>
+        <div id="overrideOtherWrap" class="override-other-wrap" style="display:none">
+          <textarea rows="2" placeholder="Describe the variation (encouraged, not required)…" id="overrideReason">${override?.reason || ''}</textarea>
+        </div>
       </div>
 
     </div>
@@ -861,6 +879,11 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
   backdrop.querySelector('#overrideClose').addEventListener('click', close);
   backdrop.querySelector('#overrideCancel').addEventListener('click', close);
   backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+
+  // OR-08 free-text toggle
+  backdrop.querySelector('#overrideReasonCode').addEventListener('change', e => {
+    backdrop.querySelector('#overrideOtherWrap').style.display = e.target.value === 'OR-08' ? 'block' : 'none';
+  });
 
   if (mode === 'label') {
     backdrop.querySelectorAll('.label-choice input').forEach(inp => {
@@ -888,7 +911,10 @@ function openOverridePopup(key, product, retailerId, attr, attrSection, panelRef
   }
 
   backdrop.querySelector('#overrideSubmit').addEventListener('click', () => {
-    const reason = backdrop.querySelector('#overrideReason').value.trim();
+    const reasonCode = backdrop.querySelector('#overrideReasonCode').value;
+    const freeText   = backdrop.querySelector('#overrideReason')?.value.trim() || '';
+    const reason     = reasonCode === 'OR-08' ? `${reasonCode}: ${freeText}`.trim().replace(/:\s*$/, '')
+                     : reasonCode || '';
     let newLabel, newScore;
     if (mode === 'score') {
       newScore = parseInt(backdrop.querySelector('#scoreNumber').value);
