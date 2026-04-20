@@ -636,10 +636,24 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
 
     const metaHtml = (isModified && override?.by)
       ? (() => {
-          const ts = override.at ? new Date(override.at).toUTCString().replace(' GMT','  UTC') : '';
-          const reasonText = override.reason ? ` · ${override.reason}` : '';
-          const tooltip = `Last action: ${override.by} · ${override.label}${reasonText}\n${ts}`;
-          return `<button class="info-icon-btn" title="${tooltip}" aria-label="Override history">ⓘ</button>`;
+          const d = override.at ? new Date(override.at) : null;
+          const dateStr = d ? d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric', timeZone:'UTC' })
+            + ' · ' + d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', timeZone:'UTC', hour12:true }) + ' UTC' : '';
+          const oldLbl  = override.oldLabel || '—';
+          const oldScr  = override.oldScore  != null ? override.oldScore  : attr.systemScore;
+          const newScr  = override.score     != null ? override.score     : null;
+          const REASON_LABELS = { 'OR-01':'Image marketing label','OR-02':'Image typography / topology','OR-03':'Text rephrasing','OR-04':'Regional / language adaptation','OR-05':'Character / formatting difference','OR-06':'Truncation','OR-07':'Secondary image ordering','OR-08':'Other' };
+          const reasonLabel = override.reason ? (() => {
+            const code = override.reason.match(/^(OR-\d+)/)?.[1] || '';
+            const freeText = override.reason.replace(/^OR-\d+:\s*/, '').trim();
+            const labelText = REASON_LABELS[code] || freeText || override.reason;
+            const display = (code === 'OR-08' && freeText) ? `${labelText}: ${freeText}` : labelText;
+            return code ? `${display} (${code})` : display;
+          })() : '—';
+          const scoreLine = newScr != null
+            ? `\nOld score: ${parseFloat(oldScr).toFixed(2)}   New score: ${parseFloat(newScr).toFixed(2)}` : '';
+          const tip = `Updated by: ${override.by}\nDate: ${dateStr}\nOld: score ${oldScr} → ${oldLbl}\nNew: ${override.label}${scoreLine}\nReason: ${reasonLabel}`;
+          return `<button class="info-icon-btn" title="${tip}" aria-label="Override history">ⓘ</button>`;
         })() : '';
 
     let actionCell = '';
@@ -648,6 +662,8 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
         actionCell = `<div class="undo-wrap" id="undo-${key.replace(/:/g,'_')}"></div>`;
       } else if (!isOverrideEligible(attr.systemScore)) {
         actionCell = `<span class="eligibility-indicator" title="Score is within the configured normal range — override not required">In range</span>`;
+      } else if (isModified) {
+        actionCell = `<button class="btn-undo-update" data-attr-key="${key}">Undo Update</button>`;
       } else {
         actionCell = `<button class="btn-update" data-attr-key="${key}">Update</button>`;
       }
@@ -713,6 +729,35 @@ function renderAttrTableBody(section, product, retailerId, panelRef) {
           openOverridePopup(key, product, retailerId, attr, section, panelRef);
         });
       }
+      // Wire Undo Update button — reverts to old label/score
+      const undoUpdateBtn = row.querySelector('.btn-undo-update');
+      if (undoUpdateBtn) {
+        undoUpdateBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const revertLabel = override.oldLabel || scoreToLabel(attr.systemScore);
+          const revertScore = override.oldScore ?? null;
+          submitOverride(key, product, retailerId, attr, revertLabel, revertScore, '', section, panelRef);
+        });
+      }
+    }
+
+    // Post-commit confirmation message (12.1.3)
+    if (isModified && !isPending) {
+      // Calculate next 2 AM UTC regardless of stale config.schedule.nextRun
+      const nextRun = (() => {
+        const d = new Date(); d.setUTCHours(2,0,0,0);
+        if (d <= new Date()) d.setUTCDate(d.getUTCDate() + 1);
+        return d;
+      })();
+      const diffMs  = nextRun.getTime() - Date.now();
+      const diffHrs = Math.max(1, Math.round(diffMs / 36e5));
+      const istOpts = { timeZone:'Asia/Kolkata', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', hour12:true };
+      const istStr  = nextRun.toLocaleString('en-IN', istOpts).replace(',','');
+      const scheduleMsg = `Updates in ${diffHrs} hour${diffHrs !== 1 ? 's' : ''} (by ${istStr} IST)`;
+      const confirmEl = document.createElement('div');
+      confirmEl.className = 'post-commit-msg';
+      confirmEl.innerHTML = `<span class="post-commit-msg__check">✓</span> Updated. Scorecard reflects this change on the next refresh.${scheduleMsg ? `<span class="post-commit-msg__schedule">${scheduleMsg}</span>` : ''}`;
+      rowWrap.appendChild(confirmEl);
     }
 
     // Render undo countdown if pending
@@ -957,7 +1002,9 @@ function commitOverride(key, product, retailerId, attr, user) {
   if (!pending) return;
   STATE.overrides[key] = {
     label: pending.newLabel, score: pending.newScore,
-    reason: pending.reason, by: pending.by, at: pending.at, state: 'modified',
+    oldLabel: pending.oldLabel, oldScore: pending.oldScore,
+    reason: pending.reason, by: pending.by, at: pending.at,
+    committedAt: new Date().toISOString(), state: 'modified',
   };
   STATE.audit.unshift({
     id: `rt_${Date.now()}`,

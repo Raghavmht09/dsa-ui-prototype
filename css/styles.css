@@ -1197,3 +1197,27 @@ img { display: block; max-width: 100%; }
   vertical-align: middle; opacity: 0.75; transition: opacity 0.15s;
 }
 .info-icon-btn:hover { opacity: 1; }
+
+/* ── 12.1.6 Undo Update button ───────────────────────────────────── */
+.btn-undo-update {
+  font-size: 11px; font-weight: 600; padding: 4px 10px;
+  border-radius: var(--radius-sm); cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary); color: var(--color-text-secondary);
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.btn-undo-update:hover { background: #fff3f3; color: #c0392b; border-color: #c0392b; }
+
+/* ── 12.1.3 Post-commit confirmation message ─────────────────────── */
+.post-commit-msg {
+  font-size: 11px; color: var(--color-text-muted);
+  padding: 5px 12px 5px 36px; display: flex; align-items: baseline;
+  gap: 6px; flex-wrap: wrap; border-top: 1px dashed var(--color-border-light);
+  background: #f9fffe;
+}
+.post-commit-msg__check { color: #00A86B; font-weight: 700; margin-left: -16px; margin-right: 4px; }
+.post-commit-msg__schedule {
+  color: var(--color-text-muted); font-size: 10px;
+  padding-left: 6px; border-left: 1px solid var(--color-border-light);
+}
